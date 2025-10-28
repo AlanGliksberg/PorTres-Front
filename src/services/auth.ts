@@ -2,6 +2,7 @@ import {
   CHANGE_PASSWORD_URI,
   GOOGLE_LOGIN_URI,
   LOGIN_URI,
+  LOGOUT_URI,
   REFRESH_TOKEN_URI,
   REGISTER_URI,
 } from "../constants/api";
@@ -38,5 +39,11 @@ export const refreshToken = async (token: string) => {
 export const changePassword = async (data: ChangePasswordDTO) => {
   return await post<void>(CHANGE_PASSWORD_URI, {
     body: data,
+  });
+};
+
+export const logout = async (expoPushToken: string | null) => {
+  return await post<void>(LOGOUT_URI, {
+    body: { expoPushToken },
   });
 };

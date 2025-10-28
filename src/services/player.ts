@@ -6,10 +6,21 @@ import {
   GET_PLAYERS_URI,
   GET_POSITIONS_URI,
   GET_QUESTIONS_URI,
+  SAVE_PLAYER_PUSH_TOKEN_URI,
   UPDATE_PLAYER_URI,
 } from "../constants/api";
-import { Category, Gender, GetPlayerParams, Player, Position } from "../types";
-import { CreatePlayerPayload, UpdatePlayerPayload } from "../types/api/Player";
+import {
+  Category,
+  Gender,
+  GetPlayerParams,
+  Player,
+  PlayerPushTokenPayload,
+  Position,
+} from "../types";
+import {
+  CreatePlayerPayload,
+  UpdatePlayerPayload,
+} from "../types/api/Player";
 import { Question } from "../types/player/Question";
 import { get, post, put } from "./api";
 import { EXTENDED_CACHE_TTL } from "./cache";
@@ -84,5 +95,11 @@ export const updatePlayer = async (data: UpdatePlayerPayload) => {
 export const getCurrentPlayer = async (withCache = true) => {
   return await get<{ player: Player }>(GET_CURRENT_PLAYER_URI, {
     withCache,
+  });
+};
+
+export const savePlayerPushToken = async (data: PlayerPushTokenPayload) => {
+  return await post<void>(SAVE_PLAYER_PUSH_TOKEN_URI, {
+    body: data,
   });
 };

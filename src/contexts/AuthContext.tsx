@@ -2,11 +2,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import * as SplashScreen from "expo-splash-screen";
 import React, { createContext, ReactNode, useEffect, useState } from "react";
+import { Platform } from "react-native";
 import { USER_TOKEN_SESSION_KEY } from "../constants/auth";
-import { refreshToken as refreshTokenService } from "../services/auth";
+import {
+  logout as logoutService,
+  refreshToken as refreshTokenService,
+} from "../services/auth";
 import { clearCache } from "../services/cache";
+import { savePlayerPushToken } from "../services/player";
 import { JWTPayload } from "../types";
 import { decodeToken } from "../utils/auth";
+import { requestExpoPushToken } from "../utils/pushNotifications";
 
 type AuthContextData = {
   token: string | null;
@@ -27,6 +33,7 @@ export const AuthContext = createContext<AuthContextData>({
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<JWTPayload | null>(null);
+  const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
 
   const storeToken = async (jwt: string | null) => {
     setToken(jwt);
@@ -53,7 +60,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
+    try {
+      const tokenForLogout =
+        expoPushToken ?? (await requestExpoPushToken());
+      await logoutService(tokenForLogout ?? null);
+    } catch (error) {
+      console.log("Error notifying logout:", error);
+    }
+
     await AsyncStorage.removeItem(USER_TOKEN_SESSION_KEY);
+    clearCache();
+    await GoogleSignin.signOut();
+    setExpoPushToken(null);
     storeToken(null);
   };
 
@@ -63,6 +81,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log("Error refreshing token", res.message);
     else storeToken(res.data.token);
   };
+
+  useEffect(() => {
+    if (!token || !user?.playerId) return;
+
+    let isSubscribed = true;
+
+    const syncPushToken = async () => {
+      try {
+        const expoToken = await requestExpoPushToken();
+        if (!expoToken || !isSubscribed) return;
+
+        setExpoPushToken(expoToken);
+        await savePlayerPushToken({
+          token: expoToken,
+          deviceType: Platform.OS,
+        });
+      } catch (error) {
+        console.log("Failed to register push token:", error);
+      }
+    };
+
+    syncPushToken();
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [token, user?.playerId]);
 
   return (
     <AuthContext.Provider

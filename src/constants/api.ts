@@ -8,6 +8,7 @@ export const GOOGLE_LOGIN_URI = `${AUTH_BASE_URI}/google`;
 export const REGISTER_URI = `${AUTH_BASE_URI}/register`;
 export const REFRESH_TOKEN_URI = `${AUTH_BASE_URI}/refresh`;
 export const CHANGE_PASSWORD_URI = `${AUTH_BASE_URI}/change-password`;
+export const LOGOUT_URI = `${AUTH_BASE_URI}/logout`;
 
 export const GET_MATCHES_URI = `${MATCH_BASE_URI}`;
 export const GET_CREATED_MATCHES_URI = `${MATCH_BASE_URI}/created`;
@@ -29,6 +30,7 @@ export const GET_PLAYERS_URI = PLAYER_BASE_URI;
 export const CREATE_PLAYER_URI = PLAYER_BASE_URI;
 export const UPDATE_PLAYER_URI = PLAYER_BASE_URI;
 export const GET_CURRENT_PLAYER_URI = `${PLAYER_BASE_URI}/me`;
+export const SAVE_PLAYER_PUSH_TOKEN_URI = `${PLAYER_BASE_URI}/push-token`;
 export const GET_GENDERS_URI = `${PLAYER_BASE_URI}/gender`;
 export const GET_POSITIONS_URI = `${PLAYER_BASE_URI}/position`;
 export const GET_CATEGORIES_URI = `${PLAYER_BASE_URI}/category`;

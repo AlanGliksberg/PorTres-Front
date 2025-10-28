@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "546760360363",
+    "project_id": "portres-886ce",
+    "storage_bucket": "portres-886ce.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:546760360363:android:c20fac51a3b8d2238512ee",
+        "android_client_info": {
+          "package_name": "com.portres.porTres"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBw3XJws6w_jtPSoJha19XhnsRP0ySIa44"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

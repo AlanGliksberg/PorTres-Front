@@ -27,4 +27,5 @@ export { Gender } from "./player/Gender";
 export { Player } from "./player/Player";
 export { Position } from "./player/Position";
 export { Team } from "./player/Team";
+export { PlayerPushTokenPayload } from "./api/Player";
 export { User } from "./user/User";

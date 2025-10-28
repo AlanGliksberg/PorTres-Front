@@ -22,3 +22,8 @@ export type UpdatePlayerPayload = {
   phone?: string;
   positionId: number;
 };
+
+export type PlayerPushTokenPayload = {
+  token: string;
+  deviceType?: string;
+};

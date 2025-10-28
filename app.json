@@ -28,7 +28,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "googleServicesFile": "./google-services.json"
     },
     "plugins": [
       "expo-dev-client",
@@ -43,6 +44,7 @@
         }
       ],
       "expo-web-browser",
+      "expo-notifications",
       [
         "@react-native-google-signin/google-signin",
         {
