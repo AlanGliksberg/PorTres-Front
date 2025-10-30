@@ -39,7 +39,10 @@ const ApplyToMatchModal: React.FC<ApplyToMatchModalProps> = ({
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      await applyToMatch(match!.id, team || 1, message, phone);
+      const res = await applyToMatch(match!.id, team || 1, message, phone);
+      if (res.error) {
+        throw new Error(res.message);
+      }
       openModal({
         title: "Postulación exitosa",
         message:

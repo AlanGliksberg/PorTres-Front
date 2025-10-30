@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const storeToken = async (jwt: string | null) => {
     if (!jwt) return;
-    
+
     const decodedToken = decodeToken(jwt);
     setUser(decodedToken);
     await AsyncStorage.setItem(USER_TOKEN_SESSION_KEY, jwt);
@@ -61,18 +61,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      const tokenForLogout =
-        expoPushToken ?? (await requestExpoPushToken());
+      const tokenForLogout = expoPushToken ?? (await requestExpoPushToken());
       await logoutService(tokenForLogout ?? null);
     } catch (error) {
       console.log("Error notifying logout:", error);
     }
 
+    await GoogleSignin.signOut();
     await AsyncStorage.removeItem(USER_TOKEN_SESSION_KEY);
     clearCache();
-    await GoogleSignin.signOut();
     setExpoPushToken(null);
-    storeToken(null);
+    setToken(null);
   };
 
   const refreshToken = async () => {
