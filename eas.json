@@ -11,7 +11,7 @@
       "env": {
         "NODE_ENV": "development",
         "EXPO_PUBLIC_API_URL": "https://zxwk0dtg-3000.brs.devtunnels.ms/api",
-        "EXPO_PUBLIC_ANDROID_CLIENT_ID": "251399065339-u5fgqv9esdlprvi9ht1n85jo6ej0bnnm.apps.googleusercontent.com",
+        "EXPO_PUBLIC_ANDROID_CLIENT_ID": "251399065339-dh53bmem04hqdei3cd9k45lcqlt7ulsj.apps.googleusercontent.com",
         "EXPO_PUBLIC_WEB_CLIENT_ID": "251399065339-q6a763soohsbnbggfeg934v5ukebddvd.apps.googleusercontent.com",
         "EXPO_PUBLIC_IOS_CLIENT_ID": "251399065339-v91cb22jdiabh8goumkrpnhua8bgqquv.apps.googleusercontent.com"
       }
@@ -24,7 +24,7 @@
       "env": {
         "NODE_ENV": "preview",
         "EXPO_PUBLIC_API_URL": "https://portres-api-251399065339.us-south1.run.app/api",
-        "EXPO_PUBLIC_ANDROID_CLIENT_ID": "251399065339-u5fgqv9esdlprvi9ht1n85jo6ej0bnnm.apps.googleusercontent.com",
+        "EXPO_PUBLIC_ANDROID_CLIENT_ID": "251399065339-7rsao6rg86791t4f3uufgrvgqek2v8lq.apps.googleusercontent.com",
         "EXPO_PUBLIC_WEB_CLIENT_ID": "251399065339-q6a763soohsbnbggfeg934v5ukebddvd.apps.googleusercontent.com",
         "EXPO_PUBLIC_IOS_CLIENT_ID": "251399065339-v91cb22jdiabh8goumkrpnhua8bgqquv.apps.googleusercontent.com"
       }

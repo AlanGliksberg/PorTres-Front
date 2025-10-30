@@ -1,26 +1,67 @@
 {
   "project_info": {
-    "project_number": "546760360363",
-    "project_id": "portres-886ce",
-    "storage_bucket": "portres-886ce.firebasestorage.app"
+    "project_number": "251399065339",
+    "project_id": "portres-475023",
+    "storage_bucket": "portres-475023.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:546760360363:android:c20fac51a3b8d2238512ee",
+        "mobilesdk_app_id": "1:251399065339:android:c5a70152b5fb69cac46a5e",
         "android_client_info": {
           "package_name": "com.portres.porTres"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "251399065339-7rsao6rg86791t4f3uufgrvgqek2v8lq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.portres.porTres",
+            "certificate_hash": "d6f427928f32addee1fbba834937efbf0a2362f0"
+          }
+        },
+        {
+          "client_id": "251399065339-dh53bmem04hqdei3cd9k45lcqlt7ulsj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.portres.porTres",
+            "certificate_hash": "2a3e37563a64f5dc9e4bcc0588b815a92d4d1a6a"
+          }
+        },
+        {
+          "client_id": "251399065339-u5fgqv9esdlprvi9ht1n85jo6ej0bnnm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.portres.porTres",
+            "certificate_hash": "7549537533ab073b53d16fcbb0835ae56b59af00"
+          }
+        },
+        {
+          "client_id": "251399065339-q6a763soohsbnbggfeg934v5ukebddvd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBw3XJws6w_jtPSoJha19XhnsRP0ySIa44"
+          "current_key": "AIzaSyDYPyJmhZ9sEW_O0pF-YMN-Q6Bho5ud5qk"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "251399065339-q6a763soohsbnbggfeg934v5ukebddvd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "251399065339-v91cb22jdiabh8goumkrpnhua8bgqquv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Thunder.porTres"
+              }
+            }
+          ]
         }
       }
     }
