@@ -36,12 +36,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
 
   const storeToken = async (jwt: string | null) => {
-    setToken(jwt);
     if (!jwt) return;
-
-    await AsyncStorage.setItem(USER_TOKEN_SESSION_KEY, jwt);
+    
     const decodedToken = decodeToken(jwt);
     setUser(decodedToken);
+    await AsyncStorage.setItem(USER_TOKEN_SESSION_KEY, jwt);
+    setToken(jwt);
   };
 
   // Al montar, tratar de recuperar el token
