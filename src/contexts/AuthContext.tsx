@@ -60,6 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
+    setToken(null);
     try {
       const tokenForLogout = expoPushToken ?? (await requestExpoPushToken());
       await logoutService(tokenForLogout ?? null);
@@ -71,7 +72,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await AsyncStorage.removeItem(USER_TOKEN_SESSION_KEY);
     clearCache();
     setExpoPushToken(null);
-    setToken(null);
   };
 
   const refreshToken = async () => {
