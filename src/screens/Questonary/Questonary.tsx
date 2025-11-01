@@ -21,6 +21,7 @@ import { useNavigation } from "expo-router";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import CustomQuestions from "./CustomQuestions";
 import { styles } from "./Questonary.styles";
+import { GENDER_CODE } from "@/src/types/player/Gender";
 
 type QuestionValues = {
   genderId: number | null;
@@ -76,7 +77,10 @@ const Questonary: React.FC = () => {
       openErrorModal("Error", "Hubo un error al crear el jugador");
     } else {
       openModal({
-        title: "¡Bienvenid@!",
+        title:
+          res.data?.player?.gender?.code === GENDER_CODE.DAMA
+            ? "¡Bienvenida!"
+            : "¡Bienvenido!",
         message:
           !data.knowsCategory && res.data?.player.category?.description
             ? `Según tus respuestas, definimos que tu categoría es ${res.data?.player.category?.description}. Tu perfil quedó configurado. Ahora podés empezar a buscar partidos y conectar con otros jugadores ¡Que disfrutes del juego!`

@@ -9,7 +9,6 @@ export const requestExpoPushToken = async (): Promise<string | null> => {
     handleNotification: async () => ({
       shouldShowBanner: true,
       shouldShowList: true,
-      shouldShowAlert: true,
       shouldPlaySound: true,
       shouldSetBadge: false,
     }),
