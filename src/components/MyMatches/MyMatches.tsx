@@ -14,6 +14,12 @@ import { getMyMatches } from "@/src/services/match";
 import { NavigationProp } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import SimpleButton from "../ui/SimpleButton/SimpleButton";
+import {
+  removeGetCreatedMatchesCache,
+  removeGetPlayedMatchesCache,
+  removeMyApplicationsCache,
+  removeMyMatchesCache,
+} from "@/src/services/cache";
 
 const MyMatches: React.FC = () => {
   const [error, setError] = useState<boolean>(false);
@@ -67,6 +73,13 @@ const MyMatches: React.FC = () => {
           error={error}
           EmptyComponent={Empty}
           viewMore
+          showDetails
+          refreshData={async () => {
+            removeMyMatchesCache();
+            removeMyApplicationsCache();
+            removeGetPlayedMatchesCache();
+            removeGetCreatedMatchesCache();
+          }}
         />
       </ScrollView>
     </View>

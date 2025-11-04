@@ -21,7 +21,7 @@ interface MatchesListProps {
   ) => Promise<[Match[], number] | void>;
   refreshData?: () => Promise<void>;
   error?: boolean;
-  showCreatorDetails?: boolean;
+  showDetails?: boolean;
   EmptyComponent?: React.ReactElement;
   viewMore?: boolean;
   allowApplications?: boolean;
@@ -35,7 +35,7 @@ export default function MatchesList({
   refreshData,
   error,
   EmptyComponent,
-  showCreatorDetails,
+  showDetails,
   viewMore,
   allowApplications,
   allowResults,
@@ -119,7 +119,7 @@ export default function MatchesList({
               <MatchBox
                 key={item.id}
                 match={item}
-                showCreatorDetails={showCreatorDetails}
+                showDetails={showDetails}
                 refreshData={async () => {
                   refreshData?.();
                   await loadMatchesData();

@@ -4,7 +4,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 import {
   Keyboard,
-  Modal,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,

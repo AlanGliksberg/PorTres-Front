@@ -36,6 +36,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
     setIsVisible(false);
   };
 
+  if (options && options.length === 0) return <></>;
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={toggleMenu} style={styles.trigger}>

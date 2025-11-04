@@ -55,7 +55,7 @@ export default function MeFaltaAlguien() {
               removeMyMatchesCache();
             }}
             error={error}
-            showCreatorDetails
+            showDetails
             EmptyComponent={<EmptyState />}
             viewMore
           />

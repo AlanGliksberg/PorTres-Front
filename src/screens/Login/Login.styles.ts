@@ -2,27 +2,47 @@ import { StyleSheet } from "react-native";
 import { colors, spacing, typography } from "../../theme";
 
 export const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    justifyContent: "center",
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xxl,
+    paddingBottom: spacing.xl,
+    gap: spacing.xxl,
     alignItems: "center",
-    padding: spacing.lg,
+  },
+  imageContainer: {
+    alignItems: "center",
+    width: "100%",
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    resizeMode: "contain",
   },
   card: {
     width: "100%",
-    maxWidth: 400,
+    maxWidth: 420,
     backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: spacing.lg,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-    elevation: 5,
+    borderRadius: 24,
+    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.lg,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 8,
   },
   title: {
+    textAlign: "center",
+    color: colors.primary,
     marginBottom: spacing.lg,
   },
   inputsContainer: {
-    gap: 20,
-    marginBottom: spacing.lg,
+    gap: spacing.md,
+    marginBottom: spacing.sm,
   },
   googleButton: {
     backgroundColor: colors.google,
@@ -36,13 +56,15 @@ export const styles = StyleSheet.create({
   buttonContainer: {
     display: "flex",
     gap: spacing.md,
+    marginTop: spacing.lg,
   },
   mainButtonsContainer: {
     display: "flex",
-    gap: spacing.sm,
+    gap: spacing.md,
   },
   secondaryButtonsContainer: {
     display: "flex",
     gap: spacing.sm,
+    alignItems: "center",
   },
 });

@@ -56,10 +56,6 @@ export const removeGetPlayedMatchesCache = () => {
   removeCache(GET_PLAYED_MATCHES_URI);
 };
 
-export const removeGetAppliedMatchesCache = () => {
-  removeCache(GET_APPLIED_MATCHES_URI);
-};
-
 export const removeGetCurrentPlayerCache = () => {
   removeCache(GET_CURRENT_PLAYER_URI);
 };

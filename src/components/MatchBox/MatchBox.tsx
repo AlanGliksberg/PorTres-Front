@@ -1,7 +1,11 @@
 import { AuthContext } from "@/src/contexts/AuthContext";
 import { ModalContext } from "@/src/contexts/ModalContext";
 import { PlayerModalsContext } from "@/src/contexts/PlayerModalsContext";
-import { deleteMatchApi } from "@/src/services/match";
+import {
+  deleteApplicationFromMatch,
+  deleteMatchApi,
+  deletePlayerFromMatch,
+} from "@/src/services/match";
 import { colors } from "@/src/theme";
 import { Match } from "@/src/types";
 import { MeFaltaAlguienStackParamList } from "@/src/types/navigation/MeFaltaAlguienStack";
@@ -23,7 +27,7 @@ type NavigationProp = NativeStackNavigationProp<MeFaltaAlguienStackParamList>;
 
 interface MatchBoxProps {
   match: Match;
-  showCreatorDetails?: boolean;
+  showDetails?: boolean;
   refreshData?: () => Promise<void>;
   allowApplications?: boolean;
   onApplicationSuccess?: (match: Match) => void;
@@ -33,7 +37,7 @@ interface MatchBoxProps {
 
 const MatchBox: React.FC<MatchBoxProps> = ({
   match,
-  showCreatorDetails = false,
+  showDetails = false,
   refreshData,
   allowApplications = false,
   onApplicationSuccess,
@@ -65,10 +69,34 @@ const MatchBox: React.FC<MatchBoxProps> = ({
   const deleteMatch = () => {
     openModal({
       title: "Eliminar partido",
-      message: `¿Estás seguro que querés eliminar el partido ${match.location}?`,
+      message: `¿Estás seguro que querés eliminar el partido en ${match.location}?`,
       primaryLabel: "Sí, eliminar",
       primaryAction: async () => {
         await deleteMatchApi(match.id);
+        refreshData && (await refreshData());
+      },
+    });
+  };
+
+  const handleLeaveMatch = () => {
+    openModal({
+      title: "Baja de partido",
+      message: `¿Estás seguro que te querés dar de baja del partido en ${match.location}?`,
+      primaryLabel: "Sí, bajarme",
+      primaryAction: async () => {
+        await deletePlayerFromMatch(match.id, user?.playerId!);
+        refreshData && (await refreshData());
+      },
+    });
+  };
+
+  const handleCancelApplication = () => {
+    openModal({
+      title: "Cancelar postulación",
+      message: `¿Estás seguro que querés cancelar la postulación al partido en ${match.location}?`,
+      primaryLabel: "Sí, cancelar",
+      primaryAction: async () => {
+        await deleteApplicationFromMatch(match.id);
         refreshData && (await refreshData());
       },
     });
@@ -91,19 +119,42 @@ const MatchBox: React.FC<MatchBoxProps> = ({
         }
       : undefined;
 
-  const dropdownOptions = [
-    {
-      label: "Editar",
-      onPress: handleEdit,
-      icon: "edit",
-    },
-    {
-      label: "Eliminar",
-      onPress: deleteMatch,
-      icon: "delete",
-      destructive: true,
-    },
-  ];
+  const dropdownOptions: {
+    label: string;
+    onPress: () => void;
+    icon?: string;
+    destructive?: boolean;
+  }[] = [];
+  if (showDetails) {
+    if (isPlayer)
+      dropdownOptions.push({
+        label: "Bajarme",
+        onPress: handleLeaveMatch,
+        icon: "cancel",
+      });
+
+    if (application) {
+      dropdownOptions.push({
+        label: "Anular postulación",
+        onPress: handleCancelApplication,
+        icon: "cancel",
+      });
+    }
+
+    if (isCreator) {
+      dropdownOptions.push({
+        label: "Editar",
+        onPress: handleEdit,
+        icon: "edit",
+      });
+      dropdownOptions.push({
+        label: "Eliminar",
+        onPress: deleteMatch,
+        icon: "delete",
+        destructive: true,
+      });
+    }
+  }
 
   return (
     <View style={styles.card}>
@@ -156,7 +207,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
             match={match}
             team={1}
             callback={refreshData}
-            canDelete={showCreatorDetails}
+            canDelete={showDetails}
             removeCallback={refreshData}
             handleApply={handleApply}
           />
@@ -167,7 +218,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
             match={match}
             team={2}
             callback={refreshData}
-            canDelete={showCreatorDetails}
+            canDelete={showDetails}
             removeCallback={refreshData}
             handleApply={handleApply}
           />
@@ -189,14 +240,13 @@ const MatchBox: React.FC<MatchBoxProps> = ({
               type="match"
             />
           )}
-          {isCreator && showCreatorDetails && (
-            <DropdownMenu options={dropdownOptions} />
-          )}
+          {showDetails && <DropdownMenu options={dropdownOptions} />}
         </View>
         <View style={styles.row}>
           {isCreator &&
-            showCreatorDetails &&
-            match.status.code === MATCH_STATUS.PENDING && (
+            showDetails &&
+            match.status.code === MATCH_STATUS.PENDING &&
+            match.applications && (
               <BorderedButton size="xl" onPress={handleApplications}>
                 <CustomText type="xsmall" style={styles.applicationsButtonText}>
                   Postulaciones

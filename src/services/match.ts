@@ -3,7 +3,6 @@ import {
   CREATE_MATCH_URI,
   DELETE_MATCH_URI,
   GET_PLAYED_MATCHES_COUNT_URI,
-  REMOVE_PLAYER_FROM_MATCH_URI,
   UPDATE_MATCH_URI,
   GET_CREATED_MATCHES_URI,
   GET_PLAYED_MATCHES_URI,
@@ -14,6 +13,8 @@ import {
   UPDATE_MATCH_RESULT_URI,
   ACCEPT_MATCH_RESULT_URI,
   CREATE_MATCH_RESULT_URI,
+  REMOVE_PLAYER_FROM_MATCH_URI,
+  DELETE_APPLICATION_URI,
 } from "../constants/api";
 import {
   CreateMatchBody,
@@ -64,16 +65,6 @@ export const addPlayerToMatch = async (
   });
 };
 
-export const removePlayerFromMatch = async (
-  matchId: number,
-  teamNumber: number,
-  playerId: number
-) => {
-  return await deleteApi<CommonMatchResponse>(
-    `${REMOVE_PLAYER_FROM_MATCH_URI}/${matchId.toString()}/${teamNumber.toString()}/${playerId.toString()}`
-  );
-};
-
 export const createMatch = async (data: CreateMatchBody) => {
   return await post<CommonMatchResponse>(CREATE_MATCH_URI, {
     body: data,
@@ -93,8 +84,14 @@ export const deletePlayerFromMatch = async (
   matchId: number,
   playerId: number
 ) => {
-  return await deleteApi<CommonMatchResponse>(ADD_PLAYER_TO_MATCH_URI, {
+  return await deleteApi<CommonMatchResponse>(REMOVE_PLAYER_FROM_MATCH_URI, {
     body: { matchId, playerId },
+  });
+};
+
+export const deleteApplicationFromMatch = async (matchId: number) => {
+  return await deleteApi<CommonMatchResponse>(DELETE_APPLICATION_URI, {
+    body: { matchId },
   });
 };
 
