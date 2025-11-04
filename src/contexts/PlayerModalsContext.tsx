@@ -4,10 +4,7 @@ import ApplicationsModal from "../components/Modals/ApplicationsModal";
 import ChangePasswordModal from "../components/Modals/ChangePasswordModal";
 import EditProfileModal from "../components/Modals/EditProfileModal";
 import LoadResultModal from "../components/Modals/LoadResultModal";
-import {
-  removeGetCreatedMatchesCache,
-  removeMyMatchesCache,
-} from "../services/cache";
+import { removeLiveMatchesCache } from "../services/cache";
 import { Match, Player } from "../types";
 import { Application } from "../types/application/Application";
 import { ModalContext } from "./ModalContext";
@@ -160,8 +157,7 @@ export const PlayerModalsProvider: React.FC<{ children: ReactNode }> = ({
       closeApplicationsModal();
     }
     refreshData && (await refreshData());
-    removeGetCreatedMatchesCache();
-    removeMyMatchesCache();
+    removeLiveMatchesCache();
   };
 
   // ==================== Change Password Modal ====================

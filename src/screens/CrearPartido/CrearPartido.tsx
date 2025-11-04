@@ -1,10 +1,7 @@
 import MatchForm from "@/src/components/MatchForm/MatchForm";
 import { LoadingContext } from "@/src/contexts/LoadingContext";
 import { ModalContext } from "@/src/contexts/ModalContext";
-import {
-  removeGetCreatedMatchesCache,
-  removeMyMatchesCache,
-} from "@/src/services/cache";
+import { removeLiveMatchesCache } from "@/src/services/cache";
 import { createMatch } from "@/src/services/match";
 import {
   CreateMatchBody,
@@ -65,8 +62,7 @@ const CrearPartido: React.FC = () => {
         );
       }
     } else {
-      removeGetCreatedMatchesCache();
-      removeMyMatchesCache();
+      removeLiveMatchesCache();
       navigation.navigate("MeFaltaAlguien");
     }
   };

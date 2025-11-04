@@ -75,3 +75,9 @@ export const removeMyApplicationsCache = () => {
 export const removeMyResultsCache = () => {
   removeCache(GET_MY_PENDING_RESULTS_URI);
 };
+
+export const removeLiveMatchesCache = () => {
+  removeMyApplicationsCache();
+  removeMyMatchesCache();
+  removeGetCreatedMatchesCache();
+}

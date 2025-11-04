@@ -3,12 +3,7 @@ import { ScrollView, View } from "react-native";
 import { Match } from "@/src/types";
 import { getAppliedMatches } from "@/src/services/match";
 import { CustomText, MatchesList, SimpleButton } from "@/src/components";
-import {
-  removeGetCreatedMatchesCache,
-  removeGetPlayedMatchesCache,
-  removeMyApplicationsCache,
-  removeMyMatchesCache,
-} from "@/src/services/cache";
+import { removeLiveMatchesCache } from "@/src/services/cache";
 import { styles } from "./ApplicationsList.styles";
 
 interface ApplicationsListProps {
@@ -54,10 +49,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({ goToMatches }) => {
         <MatchesList
           loadMatches={loadMatches}
           refreshData={async () => {
-            removeMyMatchesCache();
-            removeMyApplicationsCache();
-            removeGetPlayedMatchesCache();
-            removeGetCreatedMatchesCache();
+            removeLiveMatchesCache();
           }}
           error={error}
           EmptyComponent={EmptyState}
