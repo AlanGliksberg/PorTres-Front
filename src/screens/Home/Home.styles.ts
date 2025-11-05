@@ -8,4 +8,7 @@ export const styles = StyleSheet.create({
   topSection: {
     height: "90%",
   },
+  bottomSection: {
+    height: 30,
+  },
 });

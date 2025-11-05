@@ -68,9 +68,9 @@ const MatchBox: React.FC<MatchBoxProps> = ({
 
   const deleteMatch = () => {
     openModal({
-      title: "Eliminar partido",
-      message: `¿Estás seguro que querés eliminar el partido en ${match.location}?`,
-      primaryLabel: "Sí, eliminar",
+      title: "Cancelar partido",
+      message: `¿Estás seguro que querés cancelar el partido en ${match.location}?`,
+      primaryLabel: "Sí, cancelar",
       primaryAction: async () => {
         await deleteMatchApi(match.id);
         refreshData && (await refreshData());
@@ -148,7 +148,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
         icon: "edit",
       });
       dropdownOptions.push({
-        label: "Eliminar",
+        label: "Cancelar",
         onPress: deleteMatch,
         icon: "delete",
         destructive: true,
@@ -240,7 +240,9 @@ const MatchBox: React.FC<MatchBoxProps> = ({
               type="match"
             />
           )}
-          {showDetails && <DropdownMenu options={dropdownOptions} />}
+          {showDetails && match.status.code !== MATCH_STATUS.CANCELLED && (
+            <DropdownMenu options={dropdownOptions} />
+          )}
         </View>
         <View style={styles.row}>
           {isCreator &&

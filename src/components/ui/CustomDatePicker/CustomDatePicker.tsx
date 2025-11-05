@@ -30,6 +30,7 @@ interface CustomDatePickerProps {
   error?: string;
   inputStyles?: StyleProp<ViewStyle> | StyleProp<ViewStyle>[];
   neutralButtonLabel?: string;
+  disabled?: boolean;
 }
 
 const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
@@ -42,6 +43,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   error,
   inputStyles,
   neutralButtonLabel,
+  disabled,
 }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const toggleDatePicker = useCallback(() => {
@@ -162,6 +164,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             // onPressIn={toggleDatePicker}
             editable={false}
             containerStyle={inputStyles}
+            disabled={disabled}
           />
         </View>
       </GestureDetector>

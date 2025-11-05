@@ -22,7 +22,9 @@ export default function Home() {
         <View style={styles.topSection}>
           <TabSelector tabs={tabs} />
         </View>
-        <ContactInfo />
+        <View style={styles.bottomSection}>
+          <ContactInfo />
+        </View>
       </View>
     </CustomScreen>
   );

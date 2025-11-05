@@ -23,9 +23,14 @@ import { DURATIONS } from "@/src/constants/match";
 export type MatchFormProps = {
   initialValues?: MatchFormValues;
   onSubmit: (values: MatchFormValues) => void;
+  blockKeyData?: boolean;
 };
 
-const MatchForm: React.FC<MatchFormProps> = ({ initialValues, onSubmit }) => {
+const MatchForm: React.FC<MatchFormProps> = ({
+  initialValues,
+  onSubmit,
+  blockKeyData,
+}) => {
   const { openErrorModal } = useContext(ModalContext);
 
   const {
@@ -83,197 +88,200 @@ const MatchForm: React.FC<MatchFormProps> = ({ initialValues, onSubmit }) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.form}>
         <View style={styles.card}>
-        <CustomText.Title>Detalles</CustomText.Title>
+          <CustomText.Title>Detalles</CustomText.Title>
 
-        {/* Nombre */}
-        <Controller
-          control={control}
-          name="name"
-          render={({ field: { onChange, value } }) => (
-            <CustomTextInput
-              label="Ubicación"
-              value={value}
-              onChangeText={onChange}
-              placeholder="Nombre o ubicación"
-              error={errors.name?.message}
-              mandatory
-            />
-          )}
-        />
-
-        {/* Descripción */}
-        <Controller
-          control={control}
-          name="description"
-          render={({ field: { onChange, value } }) => (
-            <CustomTextInput
-              label="Descripción"
-              value={value}
-              onChangeText={onChange}
-              placeholder="Dirección o detalles"
-              error={errors.description?.message}
-            />
-          )}
-        />
-
-        {/* Fecha */}
-        <Controller
-          control={control}
-          name="date"
-          render={({ field: { onChange, value } }) => (
-            <CustomDatePicker
-              label="Fecha"
-              onChange={onChange}
-              date={value}
-              minimumDate={new Date()}
-              mandatory
-              placeholder="Fecha del partido"
-              error={errors.date?.message}
-            />
-          )}
-        />
-
-        {/* Hora */}
-        <Controller
-          control={control}
-          name="time"
-          render={({ field: { onChange, value } }) => (
-            <CustomTimePicker
-              label="Hora"
-              onChange={onChange}
-              time={value}
-              mandatory
-              placeholder="Hora del partido"
-              error={errors.time?.message}
-            />
-          )}
-        />
-
-        {/* Duración */}
-        <Controller
-          control={control}
-          name="duration"
-          render={({ field: { onChange, value } }) => (
-            <CustomSelect
-              label="Duración"
-              data={DURATIONS}
-              keyExtractor={(item) => item.id.toString()}
-              labelExtractor={(item) => item.name}
-              value={value}
-              onSelect={(v) => {
-                Keyboard.dismiss();
-                onChange(v);
-              }}
-              error={errors.duration?.message}
-              mandatory
-              placeholder="Duración del partido"
-            />
-          )}
-        />
-
-        {/* Género */}
-        <Controller
-          control={control}
-          name="genderId"
-          rules={{ required: "El género es obligatorio" }}
-          render={({ field: { onChange, value } }) => (
-            <CustomSelect
-              label="Género"
-              data={genders}
-              keyExtractor={(item) => item.id.toString()}
-              labelExtractor={(item) => item.name}
-              value={value}
-              onSelect={(v) => {
-                Keyboard.dismiss();
-                onChange(v);
-              }}
-              placeholder={
-                loadingGenders ? "Cargando..." : "Género del partido"
-              }
-              error={errors.genderId?.message}
-              mandatory
-            />
-          )}
-        />
-
-        {/* Categoría */}
-        <Controller
-          control={control}
-          name="categoryId"
-          rules={{ required: "La categoría es obligatoria" }}
-          render={({ field: { onChange, value } }) => (
-            <CustomSelect
-              label="Categoría"
-              data={categories}
-              keyExtractor={(item) => item.id.toString()}
-              labelExtractor={(item) => item.description}
-              value={value}
-              onSelect={(v) => {
-                Keyboard.dismiss();
-                onChange(v);
-              }}
-              disabled={!selectedGender}
-              placeholder={
-                !selectedGender
-                  ? "Primero elegí el género"
-                  : loadingCats
-                  ? "Cargando..."
-                  : "Categoría del partido"
-              }
-              error={errors.categoryId?.message}
-              mandatory
-            />
-          )}
-        />
-
-        {/* Jugadores */}
-        <View style={styles.teamsContainer}>
+          {/* Nombre */}
           <Controller
             control={control}
-            name="teams"
+            name="name"
             render={({ field: { onChange, value } }) => (
-              <CourtDistribution
-                teams={value}
-                onPlayerAdd={(player, teamNumber, playerIndex) => {
-                  if (
-                    value.some((t) =>
-                      t.players.some((p) => p.id && p.id === player.id)
-                    )
-                  ) {
-                    openErrorModal(
-                      "¡Atención!",
-                      "El jugador seleccionado ya fue agregado al partido"
-                    );
-                    return;
-                  }
-                  const teams = getNewTeams(
-                    value,
-                    player,
-                    teamNumber,
-                    playerIndex
-                  );
-                  onChange(teams);
-                }}
-                onPlayerRemove={(player, teamNumber) => {
-                  const teams = getNewTeamsWithoutPlayer(
-                    value,
-                    player,
-                    teamNumber
-                  );
-                  onChange(teams);
-                }}
+              <CustomTextInput
+                label="Ubicación"
+                value={value}
+                onChangeText={onChange}
+                placeholder="Nombre o ubicación"
+                error={errors.name?.message}
+                mandatory
+                disabled={blockKeyData}
               />
             )}
           />
-        </View>
-      </View>
 
-      {/* Botón de guardar */}
-      <FullButton onPress={handleSubmit(onSubmit)} style={styles.button}>
-        <CustomText.ButtonText type="medium">
-          Guardar partido
-        </CustomText.ButtonText>
-      </FullButton>
+          {/* Descripción */}
+          <Controller
+            control={control}
+            name="description"
+            render={({ field: { onChange, value } }) => (
+              <CustomTextInput
+                label="Descripción"
+                value={value}
+                onChangeText={onChange}
+                placeholder="Dirección o detalles"
+                error={errors.description?.message}
+              />
+            )}
+          />
+
+          {/* Fecha */}
+          <Controller
+            control={control}
+            name="date"
+            render={({ field: { onChange, value } }) => (
+              <CustomDatePicker
+                label="Fecha"
+                onChange={onChange}
+                date={value}
+                minimumDate={new Date()}
+                mandatory
+                placeholder="Fecha del partido"
+                error={errors.date?.message}
+                disabled={blockKeyData}
+              />
+            )}
+          />
+
+          {/* Hora */}
+          <Controller
+            control={control}
+            name="time"
+            render={({ field: { onChange, value } }) => (
+              <CustomTimePicker
+                label="Hora"
+                onChange={onChange}
+                time={value}
+                mandatory
+                placeholder="Hora del partido"
+                error={errors.time?.message}
+                disabled={blockKeyData}
+              />
+            )}
+          />
+
+          {/* Duración */}
+          <Controller
+            control={control}
+            name="duration"
+            render={({ field: { onChange, value } }) => (
+              <CustomSelect
+                label="Duración"
+                data={DURATIONS}
+                keyExtractor={(item) => item.id.toString()}
+                labelExtractor={(item) => item.name}
+                value={value}
+                onSelect={(v) => {
+                  Keyboard.dismiss();
+                  onChange(v);
+                }}
+                error={errors.duration?.message}
+                mandatory
+                placeholder="Duración del partido"
+              />
+            )}
+          />
+
+          {/* Género */}
+          <Controller
+            control={control}
+            name="genderId"
+            rules={{ required: "El género es obligatorio" }}
+            render={({ field: { onChange, value } }) => (
+              <CustomSelect
+                label="Género"
+                data={genders}
+                keyExtractor={(item) => item.id.toString()}
+                labelExtractor={(item) => item.name}
+                value={value}
+                onSelect={(v) => {
+                  Keyboard.dismiss();
+                  onChange(v);
+                }}
+                placeholder={
+                  loadingGenders ? "Cargando..." : "Género del partido"
+                }
+                error={errors.genderId?.message}
+                mandatory
+              />
+            )}
+          />
+
+          {/* Categoría */}
+          <Controller
+            control={control}
+            name="categoryId"
+            rules={{ required: "La categoría es obligatoria" }}
+            render={({ field: { onChange, value } }) => (
+              <CustomSelect
+                label="Categoría"
+                data={categories}
+                keyExtractor={(item) => item.id.toString()}
+                labelExtractor={(item) => item.description}
+                value={value}
+                onSelect={(v) => {
+                  Keyboard.dismiss();
+                  onChange(v);
+                }}
+                disabled={!selectedGender}
+                placeholder={
+                  !selectedGender
+                    ? "Primero elegí el género"
+                    : loadingCats
+                    ? "Cargando..."
+                    : "Categoría del partido"
+                }
+                error={errors.categoryId?.message}
+                mandatory
+              />
+            )}
+          />
+
+          {/* Jugadores */}
+          <View style={styles.teamsContainer}>
+            <Controller
+              control={control}
+              name="teams"
+              render={({ field: { onChange, value } }) => (
+                <CourtDistribution
+                  teams={value}
+                  onPlayerAdd={(player, teamNumber, playerIndex) => {
+                    if (
+                      value.some((t) =>
+                        t.players.some((p) => p.id && p.id === player.id)
+                      )
+                    ) {
+                      openErrorModal(
+                        "¡Atención!",
+                        "El jugador seleccionado ya fue agregado al partido"
+                      );
+                      return;
+                    }
+                    const teams = getNewTeams(
+                      value,
+                      player,
+                      teamNumber,
+                      playerIndex
+                    );
+                    onChange(teams);
+                  }}
+                  onPlayerRemove={(player, teamNumber) => {
+                    const teams = getNewTeamsWithoutPlayer(
+                      value,
+                      player,
+                      teamNumber
+                    );
+                    onChange(teams);
+                  }}
+                />
+              )}
+            />
+          </View>
+        </View>
+
+        {/* Botón de guardar */}
+        <FullButton onPress={handleSubmit(onSubmit)} style={styles.button}>
+          <CustomText.ButtonText type="medium">
+            Guardar partido
+          </CustomText.ButtonText>
+        </FullButton>
       </View>
     </TouchableWithoutFeedback>
   );

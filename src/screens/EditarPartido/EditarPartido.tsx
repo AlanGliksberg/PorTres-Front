@@ -97,7 +97,11 @@ const EditarPartido: React.FC = () => {
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="always"
     >
-      <MatchForm initialValues={initialValues} onSubmit={handleSubmit} />
+      <MatchForm
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        blockKeyData
+      />
     </ScrollView>
   );
 };

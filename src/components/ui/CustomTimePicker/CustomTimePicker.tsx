@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
-  Modal,
 } from "react-native";
 import CustomText from "../CustomText/CustomText";
 import { styles } from "./CustomTimePicker.styles";
@@ -29,6 +28,7 @@ interface CustomTimePickerProps {
   error?: string;
   inputStyles?: StyleProp<ViewStyle> | StyleProp<ViewStyle>[];
   neutralButtonLabel?: string;
+  disabled?: boolean;
 }
 
 const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
@@ -40,6 +40,7 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
   error,
   inputStyles,
   neutralButtonLabel,
+  disabled,
 }) => {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const toggleTimePicker = useCallback(() => {
@@ -166,6 +167,7 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
             // onPressIn={toggleTimePicker}
             editable={false}
             containerStyle={inputStyles}
+            disabled={disabled}
           />
         </View>
       </GestureDetector>
