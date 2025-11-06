@@ -29,17 +29,24 @@ const CustomScreen: React.FC<CustomScreenProps> = ({
       edges={["top", "left", "right", "bottom"]}
     >
       <View style={styles.header}>
-        {showBack ? (
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-          >
-            <MaterialIcons name="arrow-back" size={22} color="#fff" />
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.backPlaceholder} />
-        )}
-        <CustomText style={styles.title}>{title}</CustomText>
+        <View style={styles.headerContent}>
+          {showBack ? (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backButton}
+            >
+              <MaterialIcons name="arrow-back" size={22} color="#fff" />
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.backPlaceholder} />
+          )}
+          <CustomText style={styles.title}>{title}</CustomText>
+        </View>
+        <View style={styles.headerSpacer} />
+        <View pointerEvents="none" style={styles.headerDecoration}>
+          <View style={styles.tVerticalLine} />
+          <View style={styles.tHorizontalLine} />
+        </View>
       </View>
       <View style={styles.content}>
         {loading ? (
