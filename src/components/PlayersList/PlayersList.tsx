@@ -16,6 +16,9 @@ import EmptyState from "./EmptyState";
 import FiltersModal from "./FiltersModal";
 import { styles } from "./PlayersList.styles";
 import PlayerItem from "./PlayerItem";
+import SimpleButton from "../ui/SimpleButton/SimpleButton";
+
+const PAGE_SIZE = 10;
 
 interface PlayersListProps {
   onPlayerSelect?: (p: Player) => void;
@@ -24,8 +27,11 @@ interface PlayersListProps {
 const PlayersList: React.FC<PlayersListProps> = ({ onPlayerSelect }) => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(false);
   const [playerName, setPlayerName] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(false);
+  const [page, setPage] = useState(1);
 
   const [appliedGenders, setAppliedGenders] = useState<string[]>([]);
   const [appliedPositions, setAppliedPositions] = useState<string[]>([]);
@@ -56,29 +62,59 @@ const PlayersList: React.FC<PlayersListProps> = ({ onPlayerSelect }) => {
     setTempCategories([]);
   };
 
-  // TODO - agregar paginado y ver mas
-  const searchPlayers = useCallback(async () => {
-    setLoading(true);
-    setError(false);
-    try {
-      const resultPlayers = await getPlayers({
-        name: playerName,
-        gender: appliedGenders,
-        position: appliedPositions,
-        category: appliedCategories,
-      });
+  const loadPlayers = useCallback(
+    async (pageToLoad: number, append: boolean) => {
+      if (pageToLoad === 1) {
+        setLoading(true);
+        setError(false);
+      } else {
+        setLoadingMore(true);
+      }
 
-      if (resultPlayers.error || !resultPlayers.data)
-        throw new Error("Error buscando jugadores");
+      try {
+        const resultPlayers = await getPlayers({
+          name: playerName,
+          gender: appliedGenders,
+          position: appliedPositions,
+          category: appliedCategories,
+          page: pageToLoad,
+          pageSize: PAGE_SIZE,
+        });
 
-      setPlayers(resultPlayers.data.players || []);
-    } catch (e) {
-      console.log("Error:", e);
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  }, [appliedCategories, appliedGenders, appliedPositions, playerName]);
+        if (resultPlayers.error || !resultPlayers.data)
+          throw new Error("Error buscando jugadores");
+
+        const fetchedPlayers = resultPlayers.data.players || [];
+        setPlayers((prevPlayers) =>
+          append ? [...prevPlayers, ...fetchedPlayers] : fetchedPlayers
+        );
+        setHasMore(fetchedPlayers.length === PAGE_SIZE);
+        setPage(pageToLoad);
+      } catch (e) {
+        console.log("Error:", e);
+        if (pageToLoad === 1) {
+          setError(true);
+          setPlayers([]);
+        }
+      } finally {
+        if (pageToLoad === 1) {
+          setLoading(false);
+        } else {
+          setLoadingMore(false);
+        }
+      }
+    },
+    [appliedCategories, appliedGenders, appliedPositions, playerName]
+  );
+
+  const searchPlayers = useCallback(() => {
+    loadPlayers(1, false);
+  }, [loadPlayers]);
+
+  const loadMorePlayers = useCallback(() => {
+    if (loading || loadingMore || !hasMore) return;
+    loadPlayers(page + 1, true);
+  }, [hasMore, loadPlayers, loading, loadingMore, page]);
 
   useEffect(() => {
     searchPlayers();
@@ -87,6 +123,8 @@ const PlayersList: React.FC<PlayersListProps> = ({ onPlayerSelect }) => {
   const clearSearch = () => {
     setPlayerName("");
     setPlayers([]);
+    setHasMore(false);
+    setPage(1);
   };
 
   const openFilters = () => {
@@ -157,6 +195,20 @@ const PlayersList: React.FC<PlayersListProps> = ({ onPlayerSelect }) => {
               )}
               ItemSeparatorComponent={() => <View style={styles.separator} />}
               ListEmptyComponent={() => <EmptyState />}
+              ListFooterComponent={() =>
+                loadingMore ? (
+                  <View style={styles.footer}>
+                    <ActivityIndicator size="small" color={colors.primary} />
+                  </View>
+                ) : hasMore ? (
+                  <View style={styles.footer}>
+                    <SimpleButton
+                      title="Ver más"
+                      onPress={loadMorePlayers}
+                    />
+                  </View>
+                ) : null
+              }
             />
           )}
         </>
