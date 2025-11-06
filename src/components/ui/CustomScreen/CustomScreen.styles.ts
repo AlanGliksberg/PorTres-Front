@@ -23,15 +23,14 @@ export const styles = StyleSheet.create({
     minWidth: 0,
     gap: spacing.xs,
   },
-  backButton: {
-  },
+  backButton: {},
   backPlaceholder: {
     width: 22,
   },
   title: {
     flex: 1,
     textAlign: "left",
-    color: "#fff",
+    color: colors.white,
     fontSize: typography.h4,
     fontWeight: "600",
   },
@@ -52,7 +51,7 @@ export const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: LINE_THICKNESS,
-    backgroundColor: "#fff",
+    backgroundColor: colors.white,
   },
   tHorizontalLine: {
     position: "absolute",
@@ -61,7 +60,7 @@ export const styles = StyleSheet.create({
     top: "50%",
     height: LINE_THICKNESS,
     marginTop: -LINE_THICKNESS / 2,
-    backgroundColor: "#fff",
+    backgroundColor: colors.white,
   },
   content: {
     flex: 1,
