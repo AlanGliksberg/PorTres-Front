@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { Dispatch, RefObject, SetStateAction } from "react";
 import { TouchableOpacity, View } from "react-native";
 
 import CustomText from "@/src/components/ui/CustomText/CustomText";
@@ -9,19 +9,25 @@ import { styles } from "./PlayerProfile.styles";
 import PersonalInfo from "./PersonalInfo";
 import MatchHistory from "./MatchHistory";
 import Configuration from "./Configuration";
+import type { MatchesListRef } from "../MatchesList/MatchesList";
 
 export type TabType = "personal" | "historial" | "configuracion";
 
 interface ProfileTabsProps {
   player: Player | null;
   handleRefresh: () => void;
+  matchHistoryRef?: RefObject<MatchesListRef | null>;
+  activeTab: TabType;
+  setActiveTab: Dispatch<SetStateAction<TabType>>;
 }
 
 export default function ProfileTabs({
   player,
   handleRefresh,
+  matchHistoryRef,
+  activeTab,
+  setActiveTab,
 }: ProfileTabsProps) {
-  const [activeTab, setActiveTab] = useState<TabType>("personal");
 
   // TODO - usar loading
   const renderTabContent = () => {
@@ -29,7 +35,7 @@ export default function ProfileTabs({
       case "personal":
         return <PersonalInfo player={player} handleRefresh={handleRefresh} />;
       case "historial":
-        return <MatchHistory />;
+        return <MatchHistory historyRef={matchHistoryRef} />;
       case "configuracion":
         return <Configuration />;
       default:

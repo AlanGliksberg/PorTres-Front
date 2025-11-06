@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { ScrollView, View } from "react-native";
+import React, { useRef, useState } from "react";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { styles } from "./AvailableMatchesList.styles";
 import MatchesFilters from "./MatchesFilters";
 import { Match, MatchFilters } from "@/src/types";
 import MatchesList from "../MatchesList/MatchesList";
+import type { MatchesListRef } from "../MatchesList/MatchesList";
 import CustomText from "../ui/CustomText/CustomText";
 import { getMatchesWithFilters } from "@/src/services/match";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -11,6 +12,7 @@ import { colors } from "@/src/theme";
 
 const AvailableMatchesList: React.FC = () => {
   const [error, setError] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [filters, setFilters] = useState<MatchFilters>({
     description: null,
     dateFrom: null,
@@ -21,6 +23,7 @@ const AvailableMatchesList: React.FC = () => {
     category: null,
     duration: null,
   });
+  const matchesListRef = useRef<MatchesListRef | null>(null);
 
   let loadMatches = async (
     nextPage: number,
@@ -62,14 +65,29 @@ const AvailableMatchesList: React.FC = () => {
     setFilters(filters);
   };
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await matchesListRef.current?.refresh();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.filtersCard}>
         <MatchesFilters onFiltersChange={handleFiltersChange} />
       </View>
 
-      <ScrollView style={styles.matchesScroll}>
+      <ScrollView
+        style={styles.matchesScroll}
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+        }
+      >
         <MatchesList
+          ref={matchesListRef}
           key={JSON.stringify(filters)}
           loadMatches={loadMatches}
           error={error}

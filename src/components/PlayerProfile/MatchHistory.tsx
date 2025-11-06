@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { RefObject, useRef, useState } from "react";
 import { View } from "react-native";
 import CustomText from "@/src/components/ui/CustomText/CustomText";
 import { Match } from "@/src/types/match/Match";
 import { styles } from "./PlayerProfile.styles";
 import MatchesList from "../MatchesList/MatchesList";
 import { getPlayedMatches } from "@/src/services/match";
+import type { MatchesListRef } from "../MatchesList/MatchesList";
+import { removeGetPlayedMatchesCache } from "@/src/services/cache";
 
-export default function MatchHistory() {
+interface MatchHistoryProps {
+  historyRef?: RefObject<MatchesListRef | null>;
+}
+
+export default function MatchHistory({ historyRef }: MatchHistoryProps) {
   const [error, setError] = useState<boolean>(false);
+  const fallbackRef = useRef<MatchesListRef | null>(null);
+  const matchesListRef = historyRef ?? fallbackRef;
 
   const loadMatches = async (
     nextPage: number,
@@ -49,10 +57,12 @@ export default function MatchHistory() {
         <MatchesList
           loadMatches={loadMatches}
           error={error}
+          ref={matchesListRef}
           EmptyComponent={Empty}
           viewMore
           historyDetails
           allowResults
+          refreshData={async () => removeGetPlayedMatchesCache()}
         />
       </View>
     </View>

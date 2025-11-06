@@ -3,17 +3,24 @@ import { getCreatedMatches } from "@/src/services/match";
 import { Match, MeFaltaAlguienStackParamList } from "@/src/types";
 import { NavigationProp } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
-import React, { useState } from "react";
-import { View, ScrollView } from "react-native";
-import { CustomText, FullButton, MatchesList } from "../../components";
+import React, { useRef, useState } from "react";
+import { RefreshControl, ScrollView, View } from "react-native";
+import {
+  CustomText,
+  FullButton,
+  MatchesList,
+} from "../../components";
+import type { MatchesListRef } from "../../components";
 import EmptyState from "./EmptyState";
 import { styles } from "./MeFaltaAlguien.styles";
 
 export default function MeFaltaAlguien() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [error, setError] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const navigation =
     useNavigation<NavigationProp<MeFaltaAlguienStackParamList>>();
+  const matchesListRef = useRef<MatchesListRef | null>(null);
 
   const loadMatches = async (
     nextPage: number = 1,
@@ -34,6 +41,15 @@ export default function MeFaltaAlguien() {
     }
   };
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await matchesListRef.current?.refresh();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   // TODO - forzar refresh
   return (
     <View style={styles.container}>
@@ -44,8 +60,14 @@ export default function MeFaltaAlguien() {
           </CustomText>
         )}
 
-        <ScrollView style={styles.matchesScroll}>
+        <ScrollView
+          style={styles.matchesScroll}
+          refreshControl={
+            <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+          }
+        >
           <MatchesList
+            ref={matchesListRef}
             loadMatches={loadMatches}
             refreshData={async () => {
               removeLiveMatchesCache();

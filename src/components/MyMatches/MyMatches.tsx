@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ScrollView, View } from "react-native";
+import React, { useRef, useState } from "react";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { styles } from "./MyMatches.style";
 import {
   AppStackParamList,
@@ -7,6 +7,7 @@ import {
   MeFaltaAlguienStackParamList,
 } from "@/src/types";
 import MatchesList from "../MatchesList/MatchesList";
+import type { MatchesListRef } from "../MatchesList/MatchesList";
 import CustomText from "../ui/CustomText/CustomText";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { colors } from "@/src/theme";
@@ -18,10 +19,12 @@ import { removeLiveMatchesCache } from "@/src/services/cache";
 
 const MyMatches: React.FC = () => {
   const [error, setError] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const navigation =
     useNavigation<
       NavigationProp<AppStackParamList & MeFaltaAlguienStackParamList>
     >();
+  const matchesListRef = useRef<MatchesListRef | null>(null);
 
   let loadMatches = async (
     nextPage: number,
@@ -60,10 +63,25 @@ const MyMatches: React.FC = () => {
     </View>
   );
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await matchesListRef.current?.refresh();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.matchesScroll}>
+      <ScrollView
+        style={styles.matchesScroll}
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+        }
+      >
         <MatchesList
+          ref={matchesListRef}
           loadMatches={loadMatches}
           error={error}
           EmptyComponent={Empty}

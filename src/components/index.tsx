@@ -22,6 +22,7 @@ export { default as SimpleButton } from "./ui/SimpleButton/SimpleButton";
 export { TabSelector } from "./ui/TabSelector/TabSelector";
 export { default as ToggleGroup } from "./ui/ToggleGroup/ToggleGroup";
 export { default as MatchesList } from "./MatchesList/MatchesList";
+export type { MatchesListRef } from "./MatchesList/MatchesList";
 export { default as ApplicationsList } from "./ApplicationsList/ApplicationsList";
 export { default as AvailableMatchesList } from "./AvailableMatchesList/AvailableMatchesList";
 export { ContactInfo } from "./ContactInfo/ContactInfo";

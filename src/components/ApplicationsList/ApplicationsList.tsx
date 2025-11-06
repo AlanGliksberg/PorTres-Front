@@ -1,8 +1,13 @@
-import React, { useState } from "react";
-import { ScrollView, View } from "react-native";
+import React, { useRef, useState } from "react";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { Match } from "@/src/types";
 import { getAppliedMatches } from "@/src/services/match";
-import { CustomText, MatchesList, SimpleButton } from "@/src/components";
+import {
+  CustomText,
+  MatchesList,
+  SimpleButton,
+} from "@/src/components";
+import type { MatchesListRef } from "@/src/components";
 import { removeLiveMatchesCache } from "@/src/services/cache";
 import { styles } from "./ApplicationsList.styles";
 
@@ -12,6 +17,8 @@ interface ApplicationsListProps {
 
 const ApplicationsList: React.FC<ApplicationsListProps> = ({ goToMatches }) => {
   const [error, setError] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const matchesListRef = useRef<MatchesListRef | null>(null);
 
   const loadMatches = async (
     nextPage: number = 1,
@@ -43,10 +50,25 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({ goToMatches }) => {
     </View>
   );
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await matchesListRef.current?.refresh();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.matchesScroll}>
+      <ScrollView
+        style={styles.matchesScroll}
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+        }
+      >
         <MatchesList
+          ref={matchesListRef}
           loadMatches={loadMatches}
           refreshData={async () => {
             removeLiveMatchesCache();
