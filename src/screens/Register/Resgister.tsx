@@ -32,6 +32,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 const Register: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [tycAccepted, setTycAccepted] = useState(false);
   const {
     control,
     handleSubmit,
@@ -49,6 +50,13 @@ const Register: React.FC = () => {
     >();
 
   const onSubmit = async (values: RegisterFormValues) => {
+    if (!tycAccepted) {
+      openErrorModal(
+        "Registro",
+        "Debés aceptar los Términos y Condiciones para continuar."
+      );
+      return;
+    }
     const data: RegisterPayload = {
       email: values.email,
       firstName: values.firstName,
@@ -89,7 +97,6 @@ const Register: React.FC = () => {
     saveToken(res.data?.token);
   };
 
-  // TODO - agregar TYC
   return (
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -222,13 +229,37 @@ const Register: React.FC = () => {
                         />
                       </TouchableOpacity>
                     }
-                  />
-                )}
               />
+            )}
+          />
 
-              <FullButton
-                onPress={handleSubmit(onSubmit)}
-                style={{ marginTop: 20 }}
+          <View style={styles.tycContainer}>
+            <TouchableOpacity
+              style={styles.tycCheckbox}
+              onPress={() => setTycAccepted((prev) => !prev)}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name={tycAccepted ? "checkbox" : "square-outline"}
+                size={22}
+                color={tycAccepted ? colors.primary : colors.placeholder}
+              />
+            </TouchableOpacity>
+            <CustomText type="small" style={styles.tycText}>
+              Acepto los{" "}
+              <CustomText
+                type="small"
+                style={styles.tycLink}
+                onPress={() => navigation.navigate("TermsAndConditions")}
+              >
+                Términos y Condiciones
+              </CustomText>
+            </CustomText>
+          </View>
+
+          <FullButton
+            onPress={handleSubmit(onSubmit)}
+            style={{ marginTop: 20 }}
               >
                 <CustomText.ButtonText type="medium">
                   Registrarse

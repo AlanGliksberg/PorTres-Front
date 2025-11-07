@@ -7,4 +7,5 @@ export { default as Perfil } from "./Perfil/Perfil";
 export { default as Questonary } from "./Questonary/Questonary";
 export { default as QuieroJugar } from "./QuieroJugar/QuieroJugar";
 export { default as Register } from "./Register/Resgister";
+export { default as TermsAndConditions } from "./Register/TermsAndConditions";
 export { default as Welcome } from "./Welcome/Welcome";

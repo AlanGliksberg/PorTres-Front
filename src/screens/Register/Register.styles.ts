@@ -37,4 +37,21 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.lg,
     textAlign: "center",
   },
+  tycContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: spacing.sm,
+    gap: 8,
+  },
+  tycCheckbox: {
+    padding: spacing.xs,
+  },
+  tycText: {
+    flex: 1,
+    color: colors.text,
+  },
+  tycLink: {
+    color: colors.link,
+    textDecorationLine: "underline",
+  },
 });

@@ -13,7 +13,6 @@ const EmptyState: React.FC = () => {
       NavigationProp<AppStackParamList & MeFaltaAlguienStackParamList>
     >();
 
-  // TODO - ver que el navigate lleve a la pestaña de partidos dentro de quiero jugar
   return (
     <View style={styles.emptyContainer}>
       <MaterialCommunityIcons
