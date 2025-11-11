@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import * as SplashScreen from "expo-splash-screen";
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 import { Platform } from "react-native";
 import { USER_TOKEN_SESSION_KEY } from "../constants/auth";
@@ -46,9 +45,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Al montar, tratar de recuperar el token
   useEffect(() => {
-    AsyncStorage.getItem(USER_TOKEN_SESSION_KEY).then(async (stored) => {
+    AsyncStorage.getItem(USER_TOKEN_SESSION_KEY).then((stored) => {
       if (stored) storeToken(stored);
-      setTimeout(async () => await SplashScreen.hideAsync(), 1500);
     });
   }, []);
 

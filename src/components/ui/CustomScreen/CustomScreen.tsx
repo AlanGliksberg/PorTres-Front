@@ -44,8 +44,8 @@ const CustomScreen: React.FC<CustomScreenProps> = ({
         </View>
         <View style={styles.headerSpacer} />
         <View pointerEvents="none" style={styles.headerDecoration}>
-          <View style={styles.tVerticalLine} />
-          <View style={styles.tHorizontalLine} />
+          {/* <View style={styles.tVerticalLine} />
+          <View style={styles.tHorizontalLine} /> */}
         </View>
       </View>
       <View style={styles.content}>

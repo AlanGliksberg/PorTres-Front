@@ -41,12 +41,19 @@ const ApplyToMatchModal: React.FC<ApplyToMatchModalProps> = ({
       setLoading(true);
       const res = await applyToMatch(match!.id, team || 1, message, phone);
       if (res.error) {
+        if (res.code === 20) {
+          openErrorModal(
+            "Error en postulación",
+            "No cumplís con el requisito de género para este partido."
+          );
+          return;
+        }
         throw new Error(res.message);
       }
       openModal({
         title: "Postulación exitosa",
         message:
-          "Tu postulacion ya le llegó al organizador del partido. Cuando haya alguna novedad te vamos a avisar.",
+          "Tu postulación ya le llegó al organizador del partido. Cuando haya alguna novedad te vamos a avisar.",
         primaryAction: onSuccess,
         secondaryAction: onSuccess,
       });
