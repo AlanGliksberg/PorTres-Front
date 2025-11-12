@@ -1,9 +1,9 @@
-import { colors } from "@/src/theme";
+import { colors, spacing } from "@/src/theme";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   wrapper: {
-    height: "100%",
+    flex: 1,
   },
   container: {
     flexDirection: "row",
@@ -36,6 +36,6 @@ export const styles = StyleSheet.create({
     height: "100%",
   },
   content: {
-    height: "100%",
+    flex: 1,
   },
 });

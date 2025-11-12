@@ -47,6 +47,10 @@ const PlayerAvatar: React.FC<PlayerAvatarProps> = ({
       match.status.code === MATCH_STATUS.PENDING ||
       match.status.code === MATCH_STATUS.COMPLETED);
 
+  const isMatchPlayer = match
+    ? match.players.some((p) => p.id === player?.id)
+    : false;
+
   const textSize =
     size === "s"
       ? "small"
@@ -57,6 +61,7 @@ const PlayerAvatar: React.FC<PlayerAvatarProps> = ({
       : size === "xl"
       ? "xl"
       : "h1";
+
   const avatarContent = (
     <View
       style={[
@@ -90,8 +95,10 @@ const PlayerAvatar: React.FC<PlayerAvatarProps> = ({
         )
     : isCreator
     ? () => openAddPlayerToMatch(match!, team!, addPlayerCallback)
-    : handleApply
-    ? () => handleApply(team)
+    : !isMatchPlayer
+    ? handleApply
+      ? () => handleApply(team)
+      : undefined
     : undefined;
 
   return touchable && avatarAction ? (

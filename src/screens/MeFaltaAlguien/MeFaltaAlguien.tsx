@@ -5,6 +5,8 @@ import { NavigationProp } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import React, { useRef, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { spacing } from "@/src/theme";
 import {
   CustomText,
   FullButton,
@@ -21,6 +23,8 @@ export default function MeFaltaAlguien() {
   const navigation =
     useNavigation<NavigationProp<MeFaltaAlguienStackParamList>>();
   const matchesListRef = useRef<MatchesListRef | null>(null);
+  const { bottom: safeBottom } = useSafeAreaInsets();
+  const bottomInset = Math.max(safeBottom, spacing.sm);
 
   const loadMatches = async (
     nextPage: number = 1,
@@ -61,8 +65,12 @@ export default function MeFaltaAlguien() {
 
         <ScrollView
           style={styles.matchesScroll}
+          contentContainerStyle={styles.matchesScrollContent}
           refreshControl={
-            <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+            />
           }
         >
           <MatchesList
@@ -80,7 +88,12 @@ export default function MeFaltaAlguien() {
       </View>
 
       {matches.length > 0 && (
-        <View style={styles.createMatchContainer}>
+        <View
+          style={[
+            styles.createMatchContainer,
+            { paddingBottom: bottomInset },
+          ]}
+        >
           <View style={styles.separator} />
           <CustomText bold>Creá tu próximo partido:</CustomText>
           <FullButton

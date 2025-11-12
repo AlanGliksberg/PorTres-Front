@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { colors, spacing, typography } from "../../theme";
+const MIN_CREATE_SECTION_HEIGHT = spacing.xxl;
 
 export const styles = StyleSheet.create({
   container: {
@@ -7,7 +8,8 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   matchesContainer: {
-    height: "87%",
+    flex: 1,
+    paddingHorizontal: spacing.sm,
   },
   separator: {
     width: "100%",
@@ -15,9 +17,13 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.selectedText,
   },
   createMatchContainer: {
-    marginTop: spacing.md,
-    marginBottom: spacing.md,
+    marginTop: spacing.sm,
+    marginBottom: 0,
+    paddingHorizontal: spacing.sm,
+    paddingTop: spacing.sm,
+    minHeight: MIN_CREATE_SECTION_HEIGHT,
     gap: spacing.sm,
+    justifyContent: "center",
   },
   createMatchButton: {
     alignSelf: "center",
@@ -62,6 +68,9 @@ export const styles = StyleSheet.create({
     color: colors.primary,
   },
   matchesScroll: {
-    overflow: "hidden",
+    flex: 1,
+  },
+  matchesScrollContent: {
+    // paddingBottom: spacing.sm,
   },
 });

@@ -1,4 +1,4 @@
-import { colors } from "@/src/theme";
+﻿import { colors } from "@/src/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
@@ -26,7 +26,7 @@ const CustomScreen: React.FC<CustomScreenProps> = ({
   return (
     <SafeAreaView
       style={styles.container}
-      edges={["top", "left", "right", "bottom"]}
+      edges={["top", "left", "right"]}
     >
       <View style={styles.header}>
         <View style={styles.headerContent}>

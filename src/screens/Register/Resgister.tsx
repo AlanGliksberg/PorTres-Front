@@ -32,7 +32,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 const Register: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [tycAccepted, setTycAccepted] = useState(false);
+  const [tycAccepted, setTycAccepted] = useState(true);
   const {
     control,
     handleSubmit,
@@ -99,10 +99,14 @@ const Register: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <KeyboardAwareScrollView
-          enableOnAndroid
-          keyboardShouldPersistTaps="always"
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        keyboardShouldPersistTaps="always"
+        contentContainerStyle={styles.scrollContent}
+      >
+        <TouchableWithoutFeedback
+          onPress={Keyboard.dismiss}
+          accessible={false}
         >
           <View style={styles.inner}>
             <TouchableOpacity
@@ -118,7 +122,7 @@ const Register: React.FC = () => {
 
             <ScrollView
               contentContainerStyle={styles.content}
-              keyboardShouldPersistTaps="always"
+              keyboardShouldPersistTaps="handled"
             >
               {/* Campos del formulario */}
               <Controller
@@ -233,7 +237,7 @@ const Register: React.FC = () => {
             )}
           />
 
-          <View style={styles.tycContainer}>
+          {/* <View style={styles.tycContainer}>
             <TouchableOpacity
               style={styles.tycCheckbox}
               onPress={() => setTycAccepted((prev) => !prev)}
@@ -255,22 +259,23 @@ const Register: React.FC = () => {
                 Términos y Condiciones
               </CustomText>
             </CustomText>
-          </View>
+          </View> */}
 
           <FullButton
             onPress={handleSubmit(onSubmit)}
             style={{ marginTop: 20 }}
-              >
-                <CustomText.ButtonText type="medium">
-                  Registrarse
-                </CustomText.ButtonText>
-              </FullButton>
+          >
+            <CustomText.ButtonText type="medium">
+              Registrarse
+            </CustomText.ButtonText>
+          </FullButton>
             </ScrollView>
           </View>
-        </KeyboardAwareScrollView>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </KeyboardAwareScrollView>
     </View>
   );
 };
 
 export default Register;
+

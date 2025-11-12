@@ -4,8 +4,8 @@ import { colors, spacing } from "@/src/theme";
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: spacing.md,
     paddingHorizontal: spacing.sm,
+    marginTop: spacing.md,
   },
   filtersCard: {
     backgroundColor: colors.white,

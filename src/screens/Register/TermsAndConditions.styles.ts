@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    padding: spacing.md,
+    padding: spacing.lg,
     marginTop: 30,
   },
   backButton: {

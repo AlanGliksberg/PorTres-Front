@@ -1,14 +1,15 @@
 import { StyleSheet } from "react-native";
+import { spacing } from "@/src/theme";
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-between",
   },
   topSection: {
-    height: "90%",
+    flexGrow: 1,
   },
   bottomSection: {
-    height: 30,
+    marginTop: "auto",
+    paddingBottom: spacing.sm,
   },
 });

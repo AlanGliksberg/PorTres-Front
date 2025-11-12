@@ -5,8 +5,13 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    padding: spacing.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
     marginTop: 30,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
   },
   backButton: {
     display: "flex",
@@ -18,11 +23,14 @@ export const styles = StyleSheet.create({
   },
   inner: {
     flex: 1,
+    minHeight: "100%",
+    justifyContent: "center",
   },
   content: {
     marginTop: spacing.md,
     width: "100%",
-    maxWidth: 400,
+    maxWidth: 450,
+    alignSelf: "center",
     backgroundColor: colors.surface,
     borderRadius: 16,
     padding: spacing.lg,
@@ -31,7 +39,7 @@ export const styles = StyleSheet.create({
     gap: 10,
   },
   title: {
-    marginTop: 50,
+    marginTop: 0,
     fontSize: typography.h1,
     color: colors.primary,
     marginBottom: spacing.lg,

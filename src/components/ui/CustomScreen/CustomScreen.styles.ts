@@ -1,4 +1,4 @@
-import { colors, spacing, typography } from "@/src/theme";
+﻿import { colors, spacing, typography } from "@/src/theme";
 import { StyleSheet } from "react-native";
 
 const LINE_THICKNESS = 2;

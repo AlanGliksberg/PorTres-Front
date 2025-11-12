@@ -1,4 +1,4 @@
-import { IOS_CLIENT_ID, WEB_CLIENT_ID } from "@/src/constants/auth";
+﻿import { IOS_CLIENT_ID, WEB_CLIENT_ID } from "@/src/constants/auth";
 import { AuthProvider } from "@/src/contexts/AuthContext";
 import { LoadingProvider } from "@/src/contexts/LoadingContext";
 import { ModalProvider } from "@/src/contexts/ModalContext";
@@ -38,7 +38,9 @@ export default function Layout() {
             </PlayerModalsProvider>
           </ModalProvider>
         </AuthProvider>
-        {!hasAnimated && <AnimatedSplash onFinish={() => setHasAnimated(true)} />}
+        {!hasAnimated && (
+          <AnimatedSplash onFinish={() => setHasAnimated(true)} />
+        )}
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );
