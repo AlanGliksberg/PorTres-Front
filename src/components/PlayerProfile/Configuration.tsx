@@ -8,6 +8,7 @@ import { styles } from "./PlayerProfile.styles";
 import { AuthContext } from "@/src/contexts/AuthContext";
 import { PlayerModalsContext } from "@/src/contexts/PlayerModalsContext";
 import { ModalContext } from "@/src/contexts/ModalContext";
+import { deletePlayer } from "@/src/services/player";
 
 export default function Configuration() {
   const { logout } = useContext(AuthContext);
@@ -37,6 +38,18 @@ export default function Configuration() {
     }
   };
 
+  const handleDelete = () => {
+    openModal({
+      title: "Eliminar cuenta",
+      message: "¿Estás seguro que querés eliminar tu cuenta?",
+      primaryAction: () => {
+        deletePlayer();
+        logout();
+      },
+      primaryLabel: "Eliminar",
+    });
+  };
+
   return (
     <View style={styles.tabContent}>
       <View style={styles.section}>
@@ -50,7 +63,7 @@ export default function Configuration() {
             >
               <View style={styles.configButtonContent}>
                 <MaterialIcons name="lock" size={20} color={colors.primary} />
-                <CustomText style={styles.configButtonText}>
+                <CustomText style={styles.configButtonText} type="body">
                   Cambiar contraseña
                 </CustomText>
               </View>
@@ -68,7 +81,7 @@ export default function Configuration() {
           >
             <View style={styles.configButtonContent}>
               <MaterialIcons name="logout" size={20} color={colors.error} />
-              <CustomText style={styles.configButtonTextLogout}>
+              <CustomText style={styles.configButtonTextLogout} type="body">
                 Cerrar sesión
               </CustomText>
             </View>
@@ -76,6 +89,23 @@ export default function Configuration() {
               name="chevron-right"
               size={20}
               color={colors.description}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.configButtonDelete}
+            onPress={handleDelete}
+          >
+            <View style={styles.configButtonContent}>
+              <MaterialIcons name="logout" size={20} color={colors.white} />
+              <CustomText style={styles.configButtonTextDelete} type="body">
+                Eliminar cuenta
+              </CustomText>
+            </View>
+            <MaterialIcons
+              name="chevron-right"
+              size={20}
+              color={colors.white}
             />
           </TouchableOpacity>
         </View>

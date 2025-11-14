@@ -221,17 +221,27 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.error + "30",
   },
+  configButtonDelete: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 16,
+    marginTop: spacing.xxl,
+    backgroundColor: colors.error,
+    borderRadius: 10,
+  },
   configButtonContent: {
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
   },
   configButtonText: {
-    fontSize: 16,
     color: colors.text,
   },
   configButtonTextLogout: {
-    fontSize: 16,
     color: colors.error,
+  },
+  configButtonTextDelete: {
+    color: colors.white,
   },
 });

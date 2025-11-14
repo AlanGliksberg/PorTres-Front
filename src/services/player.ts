@@ -1,5 +1,6 @@
 import {
   CREATE_PLAYER_URI,
+  DELETE_PLAYER_URI,
   GET_CATEGORIES_URI,
   GET_CURRENT_PLAYER_URI,
   GET_GENDERS_URI,
@@ -17,12 +18,9 @@ import {
   PlayerPushTokenPayload,
   Position,
 } from "../types";
-import {
-  CreatePlayerPayload,
-  UpdatePlayerPayload,
-} from "../types/api/Player";
+import { CreatePlayerPayload, UpdatePlayerPayload } from "../types/api/Player";
 import { Question } from "../types/player/Question";
-import { get, post, put } from "./api";
+import { deleteApi, get, post, put } from "./api";
 import { EXTENDED_CACHE_TTL } from "./cache";
 
 export const getAllPlayers = async () => {
@@ -102,4 +100,8 @@ export const savePlayerPushToken = async (data: PlayerPushTokenPayload) => {
   return await post<void>(SAVE_PLAYER_PUSH_TOKEN_URI, {
     body: data,
   });
+};
+
+export const deletePlayer = async () => {
+  return await deleteApi<{ deleted: boolean }>(DELETE_PLAYER_URI);
 };

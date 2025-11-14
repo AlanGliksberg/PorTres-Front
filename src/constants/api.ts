@@ -29,6 +29,7 @@ export const CREATE_MATCH_RESULT_URI = `${MATCH_BASE_URI}/matchwithresult`;
 export const GET_PLAYERS_URI = PLAYER_BASE_URI;
 export const CREATE_PLAYER_URI = PLAYER_BASE_URI;
 export const UPDATE_PLAYER_URI = PLAYER_BASE_URI;
+export const DELETE_PLAYER_URI = PLAYER_BASE_URI;
 export const GET_CURRENT_PLAYER_URI = `${PLAYER_BASE_URI}/me`;
 export const SAVE_PLAYER_PUSH_TOKEN_URI = `${PLAYER_BASE_URI}/push-token`;
 export const GET_GENDERS_URI = `${PLAYER_BASE_URI}/gender`;
