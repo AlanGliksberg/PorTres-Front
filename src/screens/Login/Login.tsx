@@ -1,8 +1,8 @@
 import { LoadingContext } from "@/src/contexts/LoadingContext";
 import { ModalContext } from "@/src/contexts/ModalContext";
-import { googleLogin, login } from "@/src/services/auth";
+import { appleLogin, googleLogin, login } from "@/src/services/auth";
 import { colors } from "@/src/theme";
-import { AuthStackParamList } from "@/src/types";
+import { AppleLoginPayload, AuthStackParamList } from "@/src/types";
 import { AntDesign } from "@expo/vector-icons";
 import {
   GoogleSignin,
@@ -11,7 +11,8 @@ import {
 } from "@react-native-google-signin/google-signin";
 import { NavigationProp } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import * as AppleAuthentication from "expo-apple-authentication";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   Keyboard,
@@ -19,6 +20,7 @@ import {
   TouchableWithoutFeedback,
   View,
   Image,
+  Platform,
 } from "react-native";
 import {
   CustomText,
@@ -33,10 +35,29 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isAppleAvailable, setIsAppleAvailable] = useState(false);
   const { saveToken } = useContext(AuthContext);
   const { hideLoading, showLoading, loading } = useContext(LoadingContext);
   const { openErrorModal } = useContext(ModalContext);
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
+
+  useEffect(() => {
+    let mounted = true;
+    if (Platform.OS !== "ios") {
+      setIsAppleAvailable(false);
+      return;
+    }
+    AppleAuthentication.isAvailableAsync()
+      .then((available) => {
+        if (mounted) setIsAppleAvailable(available);
+      })
+      .catch(() => {
+        if (mounted) setIsAppleAvailable(false);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleLogin = async () => {
     showLoading();
@@ -95,6 +116,55 @@ export default function Login() {
   };
   const handleForgot = () => {
     // TODO
+  };
+  const handleApple = async () => {
+    if (!isAppleAvailable) return;
+    showLoading();
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+
+      if (!credential.identityToken) {
+        throw new Error("No se pudo obtener el token de Apple");
+      }
+
+      const payload: AppleLoginPayload = {
+        identityToken: credential.identityToken,
+      };
+
+      if (credential.email) payload.email = credential.email;
+      const givenName = credential.fullName?.givenName?.trim();
+      const familyName = credential.fullName?.familyName?.trim();
+      if (givenName) payload.firstName = givenName;
+      if (familyName) payload.lastName = familyName;
+
+      const res = await appleLogin(payload);
+      if (res.error || !res.data) {
+        console.log("Error:", res);
+        openErrorModal(
+          "Error",
+          "No se pudo iniciar sesión con Apple. Intentá nuevamente."
+        );
+        return;
+      }
+
+      saveToken(res.data.token);
+    } catch (error) {
+      if ((error as { code?: string })?.code === "ERR_REQUEST_CANCELED") {
+        return;
+      }
+      console.log("Error Apple:", error);
+      openErrorModal(
+        "Error",
+        "No se pudo iniciar sesión con Apple. Intentá nuevamente."
+      );
+    } finally {
+      hideLoading();
+    }
   };
 
   return (
@@ -165,6 +235,18 @@ export default function Login() {
                     Continuar con Google
                   </CustomText.ButtonText>
                 </FullButton>
+                {isAppleAvailable && (
+                  <FullButton
+                    style={styles.appleButton}
+                    onPress={handleApple}
+                    disabled={loading}
+                  >
+                    <AntDesign name="apple1" size={20} color="#fff" />
+                    <CustomText.ButtonText uppercase>
+                      Continuar con Apple
+                    </CustomText.ButtonText>
+                  </FullButton>
+                )}
               </View>
 
               <View style={styles.secondaryButtonsContainer}>

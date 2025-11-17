@@ -5,6 +5,7 @@ const APPLICATIONS_BASE_URI = "/application";
 
 export const LOGIN_URI = `${AUTH_BASE_URI}/login`;
 export const GOOGLE_LOGIN_URI = `${AUTH_BASE_URI}/google`;
+export const APPLE_LOGIN_URI = `${AUTH_BASE_URI}/apple`;
 export const REGISTER_URI = `${AUTH_BASE_URI}/register`;
 export const REFRESH_TOKEN_URI = `${AUTH_BASE_URI}/refresh`;
 export const CHANGE_PASSWORD_URI = `${AUTH_BASE_URI}/change-password`;

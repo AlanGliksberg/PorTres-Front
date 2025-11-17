@@ -1,4 +1,5 @@
 import {
+  APPLE_LOGIN_URI,
   CHANGE_PASSWORD_URI,
   GOOGLE_LOGIN_URI,
   LOGIN_URI,
@@ -7,6 +8,7 @@ import {
   REGISTER_URI,
 } from "../constants/api";
 import {
+  AppleLoginPayload,
   ChangePasswordDTO,
   LoginResponse,
   RegisterPayload,
@@ -21,6 +23,12 @@ export const login = async (email: string, password: string) => {
 export const googleLogin = async (idToken: string) => {
   return await post<LoginResponse>(GOOGLE_LOGIN_URI, {
     body: { idToken },
+  });
+};
+
+export const appleLogin = async (payload: AppleLoginPayload) => {
+  return await post<LoginResponse>(APPLE_LOGIN_URI, {
+    body: payload,
   });
 };
 

@@ -47,6 +47,9 @@ export const styles = StyleSheet.create({
   googleButton: {
     backgroundColor: colors.google,
   },
+  appleButton: {
+    backgroundColor: "#000000",
+  },
   forgotText: {
     color: colors.primary,
     fontSize: typography.small,

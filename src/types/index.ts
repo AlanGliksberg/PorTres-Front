@@ -7,6 +7,7 @@ export { JWTPayload } from "./auth/JWTPayload";
 export { LoginResponse } from "./auth/LoginResponse";
 export { RegisterPayload } from "./auth/RegisterPayload";
 export { RegisterResponse } from "./auth/RegisterResponse";
+export { AppleLoginPayload } from "./auth/AppleLoginPayload";
 export { MatchFormValues } from "./forms/MatchForm";
 export { RegisterFormValues } from "./forms/RegisterForm";
 export { Match } from "./match/Match";
