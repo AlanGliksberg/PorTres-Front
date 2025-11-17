@@ -7,5 +7,5 @@ export type JWTPayload = {
   phoneNumber: string | null;
   photoUrl: string | null;
   playerId: number | null;
-  googleId: string | null;
+  socialId: string | null;
 };

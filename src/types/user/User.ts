@@ -7,5 +7,5 @@ export type User = {
   createdAt: string;
   dni: string;
   photoUrl: string;
-  googleId: string;
+  socialId: string;
 };

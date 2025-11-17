@@ -26,7 +26,7 @@ export default function Configuration() {
   };
 
   const handleChangePassword = () => {
-    if (user?.googleId) {
+    if (user?.socialId) {
       openModal({
         title: "Cambiar contraseña",
         message:
@@ -56,7 +56,7 @@ export default function Configuration() {
         <CustomText style={styles.sectionTitle}>Configuración</CustomText>
 
         <View style={styles.configurationContainer}>
-          {!user?.googleId && (
+          {!user?.socialId && (
             <TouchableOpacity
               style={styles.configButton}
               onPress={handleChangePassword}
