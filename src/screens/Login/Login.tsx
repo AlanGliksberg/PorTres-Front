@@ -60,6 +60,13 @@ export default function Login() {
   }, []);
 
   const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      openErrorModal(
+        "Error",
+        "Completá el correo y la contraseña para continuar."
+      );
+      return;
+    }
     showLoading();
     const res = await login(email, password);
     if (res.error || !res.data) {
