@@ -5,6 +5,7 @@ export type RegisterFormValues = {
   phone?: string;
   password: string;
   confirmPassword: string;
+  profilePhoto?: string;
 };
 
 export const registerDefaultValues = {
@@ -14,4 +15,5 @@ export const registerDefaultValues = {
   phone: "",
   password: "",
   confirmPassword: "",
+  profilePhoto: "",
 };

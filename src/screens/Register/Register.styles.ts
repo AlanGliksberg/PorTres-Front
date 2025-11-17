@@ -62,4 +62,47 @@ export const styles = StyleSheet.create({
     color: colors.link,
     textDecorationLine: "underline",
   },
+  photoContainer: {
+    gap: spacing.sm,
+  },
+  photoLabel: {
+    color: colors.text,
+  },
+  photoPlaceholder: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderStyle: "dashed",
+    borderRadius: 16,
+    padding: spacing.md,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.input,
+  },
+  photoPlaceholderText: {
+    color: colors.placeholder,
+    textAlign: "center",
+    marginTop: spacing.sm,
+  },
+  photoPreview: {
+    width: "100%",
+    height: 200,
+    borderRadius: 16,
+    backgroundColor: colors.input,
+  },
+  photoActions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: spacing.md,
+  },
+  photoActionButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs,
+  },
+  photoActionText: {
+    color: colors.primary,
+  },
+  photoRemoveText: {
+    color: colors.error,
+  },
 });
