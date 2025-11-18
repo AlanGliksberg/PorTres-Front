@@ -82,7 +82,7 @@ const Register: React.FC = () => {
     else {
       openModal({
         title: "Registro",
-        message: "Se ha registrado correctamente",
+        message: "Te registraste correctamente",
         primaryAction: () => handleRegister(data),
       });
     }
