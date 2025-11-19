@@ -1,30 +1,33 @@
 import { removeLiveMatchesCache } from "@/src/services/cache";
 import { getCreatedMatches } from "@/src/services/match";
 import { Match, MeFaltaAlguienStackParamList } from "@/src/types";
-import { NavigationProp } from "@react-navigation/native";
-import { useNavigation } from "expo-router";
-import React, { useRef, useState } from "react";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import React, { useEffect, useRef, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { spacing } from "@/src/theme";
-import {
-  CustomText,
-  FullButton,
-  MatchesList,
-} from "../../components";
+import { CustomText, FullButton, MatchesList } from "../../components";
 import type { MatchesListRef } from "../../components";
 import EmptyState from "./EmptyState";
 import { styles } from "./MeFaltaAlguien.styles";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export default function MeFaltaAlguien() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [error, setError] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const navigation =
-    useNavigation<NavigationProp<MeFaltaAlguienStackParamList>>();
+    useNavigation<
+      NativeStackNavigationProp<MeFaltaAlguienStackParamList, "MeFaltaAlguien">
+    >();
+  const route =
+    useRoute<
+      RouteProp<MeFaltaAlguienStackParamList, "MeFaltaAlguien">
+    >();
   const matchesListRef = useRef<MatchesListRef | null>(null);
   const { bottom: safeBottom } = useSafeAreaInsets();
   const bottomInset = Math.max(safeBottom, spacing.sm);
+  const pendingEditMatch = route.params?.pendingEditMatch;
 
   const loadMatches = async (
     nextPage: number = 1,
@@ -53,6 +56,13 @@ export default function MeFaltaAlguien() {
       setIsRefreshing(false);
     }
   };
+
+  useEffect(() => {
+    if (!pendingEditMatch) return;
+
+    navigation.navigate("EditarPartido", { match: pendingEditMatch });
+    navigation.setParams({ pendingEditMatch: undefined });
+  }, [navigation, pendingEditMatch]);
 
   return (
     <View style={styles.container}>

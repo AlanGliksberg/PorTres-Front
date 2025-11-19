@@ -122,8 +122,8 @@ const MatchBox: React.FC<MatchBoxProps> = ({
     }
 
     navigation.navigate("MeFaltaAlguienStack", {
-      screen: "EditarPartido",
-      params: { match },
+      screen: "MeFaltaAlguien",
+      params: { pendingEditMatch: match },
     });
   };
 
