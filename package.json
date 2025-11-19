@@ -13,8 +13,8 @@
     "ios:submit": "eas submit -p ios",
     "android:submit": "eas submit -p android",
     "update:dev": "eas update --branch dev",
-    "update:preview": "eas update --branch preview",
-    "update:prod": "eas update --branch production --channel production --environment production",
+    "update:preview": "eas update --branch preview --environment preview",
+    "update:prod": "eas update --branch production --environment production",
     "build:dev": "eas build --profile dev -p android",
     "build:preview": "eas build --profile preview",
     "build:prod": "eas build --profile production"
