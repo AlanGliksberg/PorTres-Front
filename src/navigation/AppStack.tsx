@@ -1,6 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   FALTA_ALGUIEN_PAGE_NAME,
   HOME_PAGE_NAME,
@@ -16,6 +17,9 @@ const Tab = createBottomTabNavigator<AppStackParamList>();
 
 // TODO - cuando se entra a cada pestaña se deberia scrollear arriba de todo.
 export function AppStack() {
+  const insets = useSafeAreaInsets();
+  const tabBarPaddingBottom = Math.max(insets.bottom, 12);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -23,7 +27,10 @@ export function AppStack() {
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: { fontSize: typography.xsmall },
-        tabBarStyle: { backgroundColor: colors.white },
+        tabBarStyle: {
+          backgroundColor: colors.white,
+          height: 56 + tabBarPaddingBottom,
+        },
         popToTopOnBlur: true,
       }}
     >
