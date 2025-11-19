@@ -75,6 +75,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
         await deleteMatchApi(match.id);
         refreshData && (await refreshData());
       },
+      secondaryLabel: "No",
     });
   };
 
@@ -99,6 +100,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
         await deleteApplicationFromMatch(match.id);
         refreshData && (await refreshData());
       },
+      secondaryLabel: "No",
     });
   };
 
