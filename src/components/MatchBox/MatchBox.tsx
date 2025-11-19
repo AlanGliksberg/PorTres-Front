@@ -11,7 +11,11 @@ import { Match } from "@/src/types";
 import { MeFaltaAlguienStackParamList } from "@/src/types/navigation/MeFaltaAlguienStack";
 import { parseDateToString } from "@/src/utils/common";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import {
+  CompositeNavigationProp,
+  NavigationProp,
+  useNavigation,
+} from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useContext } from "react";
 import { View } from "react-native";
@@ -22,8 +26,12 @@ import DropdownMenu from "../ui/DropdownMenu/DropdownMenu";
 import { styles } from "./MatchBox.styles";
 import StatusChip from "./StatusChip";
 import { MATCH_STATUS } from "@/src/constants/match";
+import { AppStackParamList } from "@/src/types/navigation/AppStack";
 
-type NavigationProp = NativeStackNavigationProp<MeFaltaAlguienStackParamList>;
+type MatchBoxNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<MeFaltaAlguienStackParamList>,
+  NavigationProp<AppStackParamList>
+>;
 
 interface MatchBoxProps {
   match: Match;
@@ -48,7 +56,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
   const { openModal } = useContext(ModalContext);
   const { openApplicationsModal, openApplyToMatchModal, openLoadResultModal } =
     useContext(PlayerModalsContext);
-  const navigation = useNavigation<NavigationProp>();
+  const navigation = useNavigation<MatchBoxNavigationProp>();
   const isCreator = user?.playerId === match.creatorPlayerId;
   const application = match.applications?.find(
     (a) => a.playerId === user?.playerId
@@ -105,7 +113,18 @@ const MatchBox: React.FC<MatchBoxProps> = ({
   };
 
   const handleEdit = () => {
-    navigation.navigate("EditarPartido", { match });
+    const canNavigateWithinStack =
+      navigation.getState()?.routeNames?.includes("EditarPartido");
+
+    if (canNavigateWithinStack) {
+      navigation.navigate("EditarPartido", { match });
+      return;
+    }
+
+    navigation.navigate("MeFaltaAlguienStack", {
+      screen: "EditarPartido",
+      params: { match },
+    });
   };
 
   const handleApplications = () => {
