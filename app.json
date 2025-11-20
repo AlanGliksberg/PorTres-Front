@@ -2,7 +2,7 @@
   "expo": {
     "name": "PorTres",
     "slug": "portres",
-    "version": "1.0.14",
+    "version": "1.0.15",
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
