@@ -10,7 +10,10 @@ import { colors } from "@/src/theme";
 import { Match } from "@/src/types";
 import { MeFaltaAlguienStackParamList } from "@/src/types/navigation/MeFaltaAlguienStack";
 import { parseDateToString } from "@/src/utils/common";
-import { buildMatchShareMessage } from "@/src/utils/match";
+import {
+  buildCompletedMatchShareMessage,
+  buildMatchShareMessage,
+} from "@/src/utils/match";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import {
   CompositeNavigationProp,
@@ -134,7 +137,10 @@ const MatchBox: React.FC<MatchBoxProps> = ({
   };
 
   const handleShareMatch = async () => {
-    const message = buildMatchShareMessage(match);
+    const isCompleted = match.status.code === MATCH_STATUS.COMPLETED;
+    const message = isCompleted
+      ? buildCompletedMatchShareMessage(match)
+      : buildMatchShareMessage(match);
     try {
       await Share.share({ message });
     } catch (error) {
@@ -167,7 +173,10 @@ const MatchBox: React.FC<MatchBoxProps> = ({
     }
 
     if (isCreator) {
-      if (match.status.code === MATCH_STATUS.PENDING) {
+      if (
+        match.status.code === MATCH_STATUS.PENDING ||
+        match.status.code === MATCH_STATUS.COMPLETED
+      ) {
         dropdownOptions.push({
           label: "Compartir",
           onPress: handleShareMatch,
