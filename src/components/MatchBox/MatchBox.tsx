@@ -10,6 +10,7 @@ import { colors } from "@/src/theme";
 import { Match } from "@/src/types";
 import { MeFaltaAlguienStackParamList } from "@/src/types/navigation/MeFaltaAlguienStack";
 import { parseDateToString } from "@/src/utils/common";
+import { buildMatchShareMessage } from "@/src/utils/match";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import {
   CompositeNavigationProp,
@@ -18,7 +19,7 @@ import {
 } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useContext } from "react";
-import { View } from "react-native";
+import { Share, View } from "react-native";
 import TeamAvatars from "../TeamAvatars/TeamAvatars";
 import BorderedButton from "../ui/BorderedButton/BorderedButton";
 import CustomText from "../ui/CustomText/CustomText";
@@ -113,8 +114,9 @@ const MatchBox: React.FC<MatchBoxProps> = ({
   };
 
   const handleEdit = () => {
-    const canNavigateWithinStack =
-      navigation.getState()?.routeNames?.includes("EditarPartido");
+    const canNavigateWithinStack = navigation
+      .getState()
+      ?.routeNames?.includes("EditarPartido");
 
     if (canNavigateWithinStack) {
       navigation.navigate("EditarPartido", { match });
@@ -129,6 +131,15 @@ const MatchBox: React.FC<MatchBoxProps> = ({
 
   const handleApplications = () => {
     openApplicationsModal(match, refreshData);
+  };
+
+  const handleShareMatch = async () => {
+    const message = buildMatchShareMessage(match);
+    try {
+      await Share.share({ message });
+    } catch (error) {
+      console.error("Error sharing match", error);
+    }
   };
 
   const handleApply =
@@ -147,13 +158,6 @@ const MatchBox: React.FC<MatchBoxProps> = ({
     destructive?: boolean;
   }[] = [];
   if (showDetails) {
-    if (isPlayer)
-      dropdownOptions.push({
-        label: "Bajarme",
-        onPress: handleLeaveMatch,
-        icon: "cancel",
-      });
-
     if (application) {
       dropdownOptions.push({
         label: "Anular postulación",
@@ -163,18 +167,34 @@ const MatchBox: React.FC<MatchBoxProps> = ({
     }
 
     if (isCreator) {
+      if (match.status.code === MATCH_STATUS.PENDING) {
+        dropdownOptions.push({
+          label: "Compartir",
+          onPress: handleShareMatch,
+          icon: "share",
+        });
+      }
       dropdownOptions.push({
         label: "Editar",
         onPress: handleEdit,
         icon: "edit",
       });
+    }
+
+    if (isPlayer)
+      dropdownOptions.push({
+        label: "Bajarme",
+        onPress: handleLeaveMatch,
+        icon: "cancel",
+      });
+
+    if (isCreator)
       dropdownOptions.push({
         label: "Cancelar",
         onPress: deleteMatch,
         icon: "delete",
         destructive: true,
       });
-    }
   }
 
   return (
