@@ -1,4 +1,6 @@
 import { MatchResult, Match, Player } from "../types";
+import { GENDER_CODE } from "../types/player/Gender";
+import { parseDateToString } from "./common";
 
 export const parseSets = (match: Match | null): MatchResult | null => {
   if (!match || match.sets.length === 0) return null;
@@ -33,4 +35,126 @@ export const matchIsFriendly = (
     ? !match?.teams.every((t) => t.players.some((p) => p.userId))
     : (team1 && team1.every((p) => !p.userId)) ||
         (team2 && team2!.every((p) => !p.userId));
+};
+
+const TEAM_NUMBERS: (1 | 2)[] = [1, 2];
+const MAX_PLAYERS_PER_TEAM = 2;
+const CONFIRMED_PLAYER_EMOJI = "✅";
+const MISSING_PLAYER_EMOJI = "🆓";
+const TEAM_HEADER_EMOJI = "🤝";
+
+const buildTeamsSection = (match: Match): string[] => {
+  const lines: string[] = [];
+
+  if (!match.teams || match.teams.length === 0) return lines;
+
+  TEAM_NUMBERS.forEach((teamNumber, index) => {
+    const team = match.teams.find((t) => t.teamNumber === teamNumber);
+    const players = team?.players ?? [];
+
+    lines.push(`${TEAM_HEADER_EMOJI} Equipo ${teamNumber}`);
+
+    const slots = Math.max(players.length, MAX_PLAYERS_PER_TEAM);
+    for (let i = 0; i < slots; i++) {
+      const player = players[i];
+      if (player) {
+        const firstName = player.firstName || "Jugador";
+        lines.push(`${CONFIRMED_PLAYER_EMOJI} ${firstName}`);
+      } else {
+        lines.push(`${MISSING_PLAYER_EMOJI} Libre`);
+      }
+    }
+
+    if (index === 0) {
+      lines.push("");
+    }
+  });
+
+  return lines;
+};
+
+export const buildMatchShareMessage = (match: Match) => {
+  const missingPlayers = Math.max(0, 4 - match.players.length);
+  const playerText =
+    missingPlayers === 1
+      ? match.gender.code === GENDER_CODE.DAMA
+        ? "jugadora"
+        : "jugador"
+      : match.gender.code === GENDER_CODE.DAMA
+      ? "jugadoras"
+      : "jugadores";
+
+  const details: string[] = [
+    `🎾 Te invito a mi partido de PorTres`,
+    `${
+      missingPlayers > 1 ? "Faltan" : "Falta"
+    } ${missingPlayers} ${playerText}`,
+    "",
+    `📅 ${parseDateToString(match.date)} - ${match.time} hs`,
+  ];
+
+  if (match.duration) {
+    details.push(`⌚ Duración: ${match.duration} min`);
+  }
+
+  details.push(
+    `📍 ${match.location}${match.description ? ` - ${match.description}` : ""}`
+  );
+
+  details.push("");
+
+  if (match.category?.description) {
+    details.push(`📊 Categoría: ${match.category.description}`);
+  }
+
+  const confirmedPlayerEmoji = "✅";
+  const missingPlayerEmoji = "🆓";
+  const listedPlayers = match.players.slice(0, 4).map((player) => {
+    const firstName = player.firstName || "Jugador";
+    return `${confirmedPlayerEmoji} ${firstName}`;
+  });
+
+  const missingSlots = Math.max(0, 4 - listedPlayers.length);
+  const missingPlayerLabelBase = "Libre";
+
+  for (let i = 0; i < missingSlots; i++) {
+    listedPlayers.push(`${missingPlayerEmoji} ${missingPlayerLabelBase}`);
+  }
+
+  if (listedPlayers.length) {
+    details.push("");
+    details.push(...listedPlayers);
+  }
+
+  return `${details.join("\n")}\n\n¿Te sumás? Escribime por privado.`;
+};
+
+export const buildCompletedMatchShareMessage = (match: Match) => {
+  const details: string[] = [
+    `🎾 ¡Partido confirmado!`,
+    "",
+    `📅 ${parseDateToString(match.date)} - ${match.time} hs`,
+  ];
+
+  if (match.duration) {
+    details.push(`⌚ Duración: ${match.duration} min`);
+  }
+
+  details.push(
+    `📍 ${match.location}${match.description ? ` - ${match.description}` : ""}`
+  );
+
+  details.push("");
+
+  if (match.category?.description) {
+    details.push(`📊 Categoría: ${match.category.description}`);
+  }
+
+  const teamsSection = buildTeamsSection(match);
+  if (teamsSection.length) {
+    details.push("");
+    details.push(...teamsSection);
+  }
+
+  return `${details.join("\n")}\n\n¡Buena suerte!`;
 };

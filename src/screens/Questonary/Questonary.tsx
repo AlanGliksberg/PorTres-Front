@@ -164,7 +164,7 @@ const Questonary: React.FC = () => {
             ¿Sabés en qué categoría jugás?
           </CustomText>
           <CustomText type="small" style={styles.subLabel}>
-            Apelamos a la buena fé de todos los jugadores para la correcta
+            Apelamos a la buena fe de todos los jugadores para la correcta
             elección de su categoría a fin de armar partidos parejos. Pronto
             ofreceremos opciones para validar la categoría.
           </CustomText>

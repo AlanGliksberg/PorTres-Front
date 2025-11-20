@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   FlatList,
-  Modal,
   StyleProp,
   TextStyle,
   TouchableOpacity,
@@ -14,6 +13,7 @@ import { styles } from "./CustomSelect.styles";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "@/src/theme";
 import CustomModalView from "../../Modals/CustomModalView";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type Item = {
   id: string | number;
@@ -112,27 +112,29 @@ const CustomSelect = <T extends Item>({
         animationType="fade"
         onRequestClose={() => setModalVisible(false)}
       >
-        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-          <View style={styles.backdrop} />
-        </TouchableWithoutFeedback>
-        <View style={styles.modalContent}>
-          <FlatList
-            data={dataWithReset}
-            keyExtractor={keyExtractor}
-            renderItem={({ item }) => {
-              const isSelected = item.id === value;
-              return (
-                <TouchableOpacity
-                  style={[styles.item, isSelected && styles.selected]}
-                  onPress={() => handleSelect(item.id)}
-                >
-                  <CustomText type="body">{labelExtractor(item)}</CustomText>
-                </TouchableOpacity>
-              );
-            }}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-          />
-        </View>
+        <SafeAreaView edges={["bottom"]} style={styles.modalSafeArea}>
+          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+            <View style={styles.backdrop} />
+          </TouchableWithoutFeedback>
+          <View style={styles.modalContent}>
+            <FlatList
+              data={dataWithReset}
+              keyExtractor={keyExtractor}
+              renderItem={({ item }) => {
+                const isSelected = item.id === value;
+                return (
+                  <TouchableOpacity
+                    style={[styles.item, isSelected && styles.selected]}
+                    onPress={() => handleSelect(item.id)}
+                  >
+                    <CustomText type="body">{labelExtractor(item)}</CustomText>
+                  </TouchableOpacity>
+                );
+              }}
+              ItemSeparatorComponent={() => <View style={styles.separator} />}
+            />
+          </View>
+        </SafeAreaView>
       </CustomModalView>
     </View>
   );

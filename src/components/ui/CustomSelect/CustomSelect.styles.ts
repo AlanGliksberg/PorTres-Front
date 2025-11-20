@@ -32,6 +32,10 @@ export const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
   },
+  modalSafeArea: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
   modalContent: {
     backgroundColor: colors.background,
     maxHeight: "50%",

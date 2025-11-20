@@ -44,8 +44,11 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
 }) => {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const toggleTimePicker = useCallback(() => {
-    setShowTimePicker((prev) => !prev);
-  }, []);
+    setShowTimePicker((prev) => {
+      if (disabled && !prev) return prev;
+      return !prev;
+    });
+  }, [disabled]);
 
   const d = new Date();
   d.setHours(19, 0, 0, 0);
@@ -77,12 +80,13 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
     () =>
       Gesture.Tap()
         .maxDistance(6)
+        .enabled(!disabled)
         .onEnd((_evt, success) => {
           if (success) {
             runOnJS(toggleTimePicker)();
           }
         }),
-    [toggleTimePicker]
+    [disabled, toggleTimePicker]
   );
 
   return (

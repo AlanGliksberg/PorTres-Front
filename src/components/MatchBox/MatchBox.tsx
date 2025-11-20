@@ -10,11 +10,19 @@ import { colors } from "@/src/theme";
 import { Match } from "@/src/types";
 import { MeFaltaAlguienStackParamList } from "@/src/types/navigation/MeFaltaAlguienStack";
 import { parseDateToString } from "@/src/utils/common";
+import {
+  buildCompletedMatchShareMessage,
+  buildMatchShareMessage,
+} from "@/src/utils/match";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import {
+  CompositeNavigationProp,
+  NavigationProp,
+  useNavigation,
+} from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useContext } from "react";
-import { View } from "react-native";
+import { Share, View } from "react-native";
 import TeamAvatars from "../TeamAvatars/TeamAvatars";
 import BorderedButton from "../ui/BorderedButton/BorderedButton";
 import CustomText from "../ui/CustomText/CustomText";
@@ -22,8 +30,12 @@ import DropdownMenu from "../ui/DropdownMenu/DropdownMenu";
 import { styles } from "./MatchBox.styles";
 import StatusChip from "./StatusChip";
 import { MATCH_STATUS } from "@/src/constants/match";
+import { AppStackParamList } from "@/src/types/navigation/AppStack";
 
-type NavigationProp = NativeStackNavigationProp<MeFaltaAlguienStackParamList>;
+type MatchBoxNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<MeFaltaAlguienStackParamList>,
+  NavigationProp<AppStackParamList>
+>;
 
 interface MatchBoxProps {
   match: Match;
@@ -48,7 +60,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
   const { openModal } = useContext(ModalContext);
   const { openApplicationsModal, openApplyToMatchModal, openLoadResultModal } =
     useContext(PlayerModalsContext);
-  const navigation = useNavigation<NavigationProp>();
+  const navigation = useNavigation<MatchBoxNavigationProp>();
   const isCreator = user?.playerId === match.creatorPlayerId;
   const application = match.applications?.find(
     (a) => a.playerId === user?.playerId
@@ -75,6 +87,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
         await deleteMatchApi(match.id);
         refreshData && (await refreshData());
       },
+      secondaryLabel: "No",
     });
   };
 
@@ -99,15 +112,40 @@ const MatchBox: React.FC<MatchBoxProps> = ({
         await deleteApplicationFromMatch(match.id);
         refreshData && (await refreshData());
       },
+      secondaryLabel: "No",
     });
   };
 
   const handleEdit = () => {
-    navigation.navigate("EditarPartido", { match });
+    const canNavigateWithinStack = navigation
+      .getState()
+      ?.routeNames?.includes("EditarPartido");
+
+    if (canNavigateWithinStack) {
+      navigation.navigate("EditarPartido", { match });
+      return;
+    }
+
+    navigation.navigate("MeFaltaAlguienStack", {
+      screen: "MeFaltaAlguien",
+      params: { pendingEditMatch: match },
+    });
   };
 
   const handleApplications = () => {
     openApplicationsModal(match, refreshData);
+  };
+
+  const handleShareMatch = async () => {
+    const isCompleted = match.status.code === MATCH_STATUS.COMPLETED;
+    const message = isCompleted
+      ? buildCompletedMatchShareMessage(match)
+      : buildMatchShareMessage(match);
+    try {
+      await Share.share({ message });
+    } catch (error) {
+      console.error("Error sharing match", error);
+    }
   };
 
   const handleApply =
@@ -126,13 +164,6 @@ const MatchBox: React.FC<MatchBoxProps> = ({
     destructive?: boolean;
   }[] = [];
   if (showDetails) {
-    if (isPlayer)
-      dropdownOptions.push({
-        label: "Bajarme",
-        onPress: handleLeaveMatch,
-        icon: "cancel",
-      });
-
     if (application) {
       dropdownOptions.push({
         label: "Anular postulación",
@@ -142,18 +173,37 @@ const MatchBox: React.FC<MatchBoxProps> = ({
     }
 
     if (isCreator) {
+      if (
+        match.status.code === MATCH_STATUS.PENDING ||
+        match.status.code === MATCH_STATUS.COMPLETED
+      ) {
+        dropdownOptions.push({
+          label: "Compartir",
+          onPress: handleShareMatch,
+          icon: "share",
+        });
+      }
       dropdownOptions.push({
         label: "Editar",
         onPress: handleEdit,
         icon: "edit",
       });
+    }
+
+    if (isPlayer)
+      dropdownOptions.push({
+        label: "Bajarme",
+        onPress: handleLeaveMatch,
+        icon: "cancel",
+      });
+
+    if (isCreator)
       dropdownOptions.push({
         label: "Cancelar",
         onPress: deleteMatch,
         icon: "delete",
         destructive: true,
       });
-    }
   }
 
   return (

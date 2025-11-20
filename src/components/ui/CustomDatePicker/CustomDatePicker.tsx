@@ -47,8 +47,11 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const toggleDatePicker = useCallback(() => {
-    setShowDatePicker((prev) => !prev);
-  }, []);
+    setShowDatePicker((prev) => {
+      if (disabled && !prev) return prev; // avoid opening when disabled
+      return !prev;
+    });
+  }, [disabled]);
 
   const onDateChange = (event: DateTimePickerEvent, date?: Date) => {
     if (Platform.OS !== "ios") toggleDatePicker();
@@ -76,12 +79,13 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     () =>
       Gesture.Tap()
         .maxDistance(6) // evita tap si hubo scroll > 6px
+        .enabled(!disabled)
         .onEnd((_evt, success) => {
           if (success) {
             runOnJS(toggleDatePicker)(); // 🚀 llamar función JS desde worklet
           }
         }),
-    [toggleDatePicker]
+    [disabled, toggleDatePicker]
   );
 
   return (

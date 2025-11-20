@@ -30,11 +30,19 @@
           }
         },
         {
+          "client_id": "251399065339-jrl3ed1obkn1s11ahfd0ata3etl7u4lf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.portres.porTres",
+            "certificate_hash": "393e2013df28034de4216fd5e31dbf2f7f471deb"
+          }
+        },
+        {
           "client_id": "251399065339-u5fgqv9esdlprvi9ht1n85jo6ej0bnnm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.portres.porTres",
-            "certificate_hash": "7549537533ab073b53d16fcbb0835ae56b59af00"
+            "certificate_hash": "64baf22c34644f8814ae719760d5ef529d02a919"
           }
         },
         {

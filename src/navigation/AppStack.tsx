@@ -1,6 +1,8 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationState } from "@react-navigation/native";
 import React from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   FALTA_ALGUIEN_PAGE_NAME,
   HOME_PAGE_NAME,
@@ -14,8 +16,33 @@ import MeFaltaAlguienStack from "./MeFaltaAlguienStack";
 
 const Tab = createBottomTabNavigator<AppStackParamList>();
 
+const shouldResetStack = (state?: NavigationState) =>
+  state?.type === "stack" && state.index > 0;
+
+const createTabPressListener = (
+  routeName: keyof AppStackParamList,
+  params?: Record<string, unknown>
+) => {
+  return ({ navigation, route }: any) => ({
+    tabPress: (event: { preventDefault: () => void }) => {
+      const currentRoute = navigation
+        .getState()
+        .routes.find((r: { key: string }) => r.key === route.key);
+      const state = currentRoute?.state as NavigationState | undefined;
+
+      if (shouldResetStack(state)) {
+        event.preventDefault();
+        navigation.navigate(routeName, params);
+      }
+    },
+  });
+};
+
 // TODO - cuando se entra a cada pestaña se deberia scrollear arriba de todo.
 export function AppStack() {
+  const insets = useSafeAreaInsets();
+  const tabBarPaddingBottom = Math.max(insets.bottom, 12);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -23,7 +50,10 @@ export function AppStack() {
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: { fontSize: typography.xsmall },
-        tabBarStyle: { backgroundColor: colors.white },
+        tabBarStyle: {
+          backgroundColor: colors.white,
+          height: 56 + tabBarPaddingBottom,
+        },
         popToTopOnBlur: true,
       }}
     >
@@ -36,6 +66,7 @@ export function AppStack() {
             <MaterialIcons name="home" size={size} color={color} />
           ),
         }}
+        listeners={createTabPressListener("Home")}
       />
 
       <Tab.Screen
@@ -47,6 +78,7 @@ export function AppStack() {
             <MaterialIcons name="sports-tennis" size={size} color={color} />
           ),
         }}
+        listeners={createTabPressListener("QuieroJugar")}
       />
 
       <Tab.Screen
@@ -58,6 +90,9 @@ export function AppStack() {
             <MaterialIcons name="group-add" size={size} color={color} />
           ),
         }}
+        listeners={createTabPressListener("MeFaltaAlguienStack", {
+          screen: "MeFaltaAlguien",
+        })}
       />
 
       <Tab.Screen
@@ -69,6 +104,7 @@ export function AppStack() {
             <MaterialIcons name="person" size={size} color={color} />
           ),
         }}
+        listeners={createTabPressListener("MiPerfil")}
       />
     </Tab.Navigator>
   );
