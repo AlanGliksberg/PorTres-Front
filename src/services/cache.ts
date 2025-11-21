@@ -81,4 +81,14 @@ export const removeLiveMatchesCache = () => {
   removeMyApplicationsCache();
   removeMyMatchesCache();
   removeGetCreatedMatchesCache();
-}
+};
+
+export const removeAllMatchesCache = () => {
+  removeMyResultsCache();
+  removeMyApplicationsCache();
+  removeMyMatchesCache();
+  removeGetCreatedMatchesCache();
+  removePlayedCountCache();
+  removeGetCurrentPlayerCache();
+  removeGetPlayedMatchesCache();
+};

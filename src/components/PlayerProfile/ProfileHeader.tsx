@@ -16,6 +16,7 @@ import {
   deletePlayerPicture,
   updatePlayerPicture,
 } from "@/src/services/player";
+import { removeAllMatchesCache } from "@/src/services/cache";
 
 interface ProfileHeaderProps {
   player: Player | null;
@@ -72,7 +73,7 @@ export default function ProfileHeader({
       aspect: [1, 1],
       cameraType: ImagePicker.CameraType.front,
       shape: "oval",
-      quality: 0.7
+      quality: 0.7,
     });
 
     if (result.canceled || !result.assets?.length) return;
@@ -98,6 +99,7 @@ export default function ProfileHeader({
         return;
       }
       onPhotoUpdated?.();
+      removeAllMatchesCache();
       openModal({
         title: "Foto actualizada",
         message: "Tu foto de perfil se actualizó correctamente.",
