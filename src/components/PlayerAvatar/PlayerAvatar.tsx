@@ -73,7 +73,7 @@ const PlayerAvatar: React.FC<PlayerAvatarProps> = ({
       {player && player.user?.photoUrl ? (
         <Image
           source={{ uri: player.user.photoUrl }}
-          style={styles[`size_${size}`]}
+          style={[styles[`size_${size}`], styles.border]}
         />
       ) : (
         <CustomText

@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  Image,
 } from "react-native";
 
 import { CustomText, CustomTextInput, FullButton } from "@/src/components";
@@ -29,7 +28,6 @@ import { styles } from "./Register.styles";
 import { SetPlayerStackParamList } from "@/src/types/navigation/SetPlayerStack";
 import { AuthContext } from "@/src/contexts/AuthContext";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import * as ImagePicker from "expo-image-picker";
 
 const Register: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,8 +37,6 @@ const Register: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors },
-    watch,
-    setValue,
   } = useForm<RegisterFormValues>({
     resolver: yupResolver(registerSchema) as Resolver<RegisterFormValues>,
     defaultValues: registerDefaultValues,
@@ -52,10 +48,6 @@ const Register: React.FC = () => {
     useNavigation<
       NavigationProp<AuthStackParamList & SetPlayerStackParamList>
     >();
-  const profilePhoto = watch("profilePhoto");
-  const [mediaPermission, requestMediaPermission] =
-    ImagePicker.useMediaLibraryPermissions();
-
   const onSubmit = async (values: RegisterFormValues) => {
     if (!tycAccepted) {
       openErrorModal(
@@ -70,7 +62,6 @@ const Register: React.FC = () => {
       lastName: values.lastName,
       password: values.password,
       phone: values.phone,
-      profilePhoto: values.profilePhoto || undefined,
     };
     showLoading();
     const res = await register(data);
@@ -94,52 +85,6 @@ const Register: React.FC = () => {
         primaryAction: () => handleRegister(data),
       });
     }
-  };
-
-  const requestGalleryPermission = async () => {
-    if (mediaPermission?.granted) return true;
-    const permissionResult = await requestMediaPermission();
-    if (!permissionResult.granted) {
-      openErrorModal(
-        "Permisos",
-        "Necesitamos permisos para acceder a tus fotos y poder cargar tu imagen de perfil."
-      );
-      return false;
-    }
-    return true;
-  };
-
-  const handleSelectProfilePhoto = async () => {
-    const hasPermission = await requestGalleryPermission();
-    if (!hasPermission) return;
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.7,
-      base64: true,
-    });
-
-    if (result.canceled || !result.assets?.length) return;
-
-    const asset = result.assets[0];
-    if (!asset.base64) {
-      openErrorModal(
-        "Registro",
-        "No pudimos procesar tu foto. Intentá nuevamente."
-      );
-      return;
-    }
-
-    const mimeType = asset.mimeType || "image/jpeg";
-    setValue("profilePhoto", `data:${mimeType};base64,${asset.base64}`, {
-      shouldDirty: true,
-    });
-  };
-
-  const handleRemoveProfilePhoto = () => {
-    setValue("profilePhoto", "", { shouldDirty: true });
   };
 
   const handleRegister = async (data: RegisterPayload) => {
@@ -178,63 +123,6 @@ const Register: React.FC = () => {
               contentContainerStyle={styles.content}
               keyboardShouldPersistTaps="handled"
             >
-              <View style={styles.photoContainer}>
-                <CustomText bold type="small" style={styles.photoLabel}>
-                  Foto de perfil (opcional)
-                </CustomText>
-
-                {profilePhoto ? (
-                  <>
-                    <Image
-                      source={{ uri: profilePhoto }}
-                      style={styles.photoPreview}
-                    />
-                    <View style={styles.photoActions}>
-                      <TouchableOpacity
-                        style={styles.photoActionButton}
-                        onPress={handleSelectProfilePhoto}
-                      >
-                        <Ionicons
-                          name="camera"
-                          size={18}
-                          color={colors.primary}
-                        />
-                        <CustomText type="small" style={styles.photoActionText}>
-                          Cambiar foto
-                        </CustomText>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.photoActionButton}
-                        onPress={handleRemoveProfilePhoto}
-                      >
-                        <Ionicons
-                          name="trash-outline"
-                          size={18}
-                          color={colors.error}
-                        />
-                        <CustomText type="small" style={styles.photoRemoveText}>
-                          Quitar
-                        </CustomText>
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                ) : (
-                  <TouchableOpacity
-                    style={styles.photoPlaceholder}
-                    onPress={handleSelectProfilePhoto}
-                  >
-                    <Ionicons
-                      name="camera"
-                      size={24}
-                      color={colors.placeholder}
-                    />
-                    <CustomText type="small" style={styles.photoPlaceholderText}>
-                      Subí una foto o hacé click para tomarla desde la galería
-                    </CustomText>
-                  </TouchableOpacity>
-                )}
-              </View>
-
               {/* Campos del formulario */}
               <Controller
                 control={control}

@@ -6,7 +6,6 @@ export const registerSchema = validator
     lastName: validator.string().isRequired().maxStr(40),
     email: validator.string().email("Email inválido").isRequired().maxStr(50),
     phone: validator.string().optional().maxStr(20),
-    profilePhoto: validator.string().optional(),
     password: validator
       .string()
       .isRequired()

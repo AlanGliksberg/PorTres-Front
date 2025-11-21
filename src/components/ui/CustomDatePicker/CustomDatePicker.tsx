@@ -33,6 +33,7 @@ interface CustomDatePickerProps {
   disabled?: boolean;
 }
 
+// TODO - ajustar minimum date en todos lados
 const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   label,
   date,

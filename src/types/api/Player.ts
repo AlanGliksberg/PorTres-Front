@@ -14,6 +14,13 @@ export type CreatePlayerPayload = {
   knowsCategory: boolean;
   categoryId?: number;
   answers?: number[];
+  profilePhoto?: ProfilePhotoPayload;
+};
+
+export type ProfilePhotoPayload = {
+  uri: string;
+  name: string;
+  type: string;
 };
 
 export type UpdatePlayerPayload = {

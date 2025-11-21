@@ -101,9 +101,14 @@ const fetch = async <T>(
   }
 };
 
-const getHeaders = (customHeaders: Record<string, any>) => {
-  return {
-    "Content-Type": "application/json",
-    ...customHeaders,
-  };
+const getHeaders = (customHeaders: Record<string, any> = {}) => {
+  const headers = { ...customHeaders };
+  if (
+    !Object.keys(headers).some(
+      (key) => key.toLowerCase() === "content-type"
+    )
+  ) {
+    headers["Content-Type"] = "application/json";
+  }
+  return headers;
 };

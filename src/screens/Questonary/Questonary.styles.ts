@@ -62,4 +62,58 @@ export const styles = StyleSheet.create({
     marginTop: spacing.lg,
     alignSelf: "flex-end",
   },
+  photoSection: {
+    gap: spacing.xs,
+    alignItems: "center",
+  },
+  photoLabel: {
+    color: colors.text,
+    alignSelf: "flex-start",
+  },
+  photoSubtitle: {
+    color: colors.placeholder,
+    alignSelf: "flex-start",
+  },
+  photoPlaceholder: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderStyle: "dashed",
+    borderRadius: 65,
+    width: 130,
+    height: 130,
+    padding: spacing.sm,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.input,
+  },
+  photoPlaceholderText: {
+    color: colors.placeholder,
+    textAlign: "center",
+    marginTop: spacing.xs,
+  },
+  photoPreview: {
+    width: 130,
+    height: 130,
+    borderRadius: 65,
+    backgroundColor: colors.input,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    alignSelf: "center",
+  },
+  photoActions: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: spacing.md,
+  },
+  photoActionButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs,
+  },
+  photoActionText: {
+    color: colors.primary,
+  },
+  photoRemoveText: {
+    color: colors.error,
+  },
 });

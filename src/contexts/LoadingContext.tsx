@@ -24,7 +24,11 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
   return (
     <LoadingContext.Provider value={{ loading, showLoading, hideLoading }}>
       {loading && (
-        <BlurView intensity={50} style={loadingStyles.loadingOverlay}>
+        <BlurView
+          intensity={65}
+          tint="light"
+          style={loadingStyles.loadingOverlay}
+        >
           <ActivityIndicator size="large" color={colors.primary} />
         </BlurView>
       )}
@@ -39,5 +43,6 @@ const loadingStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     zIndex: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.6)",
   },
 });

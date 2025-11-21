@@ -4,5 +4,4 @@ export type RegisterPayload = {
   firstName: string;
   lastName: string;
   phone?: string;
-  profilePhoto?: string;
 };

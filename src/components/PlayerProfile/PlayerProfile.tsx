@@ -75,7 +75,7 @@ export default function PlayerProfile({ playerId }: PlayerProfileProps) {
         <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
       }
     >
-      <ProfileHeader player={player} />
+      <ProfileHeader player={player} onPhotoUpdated={loadPlayerData} />
       <ProfileTabs
         activeTab={activeTab}
         setActiveTab={setActiveTab}

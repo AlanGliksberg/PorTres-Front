@@ -38,6 +38,7 @@ export const cacheGetCall = (
   url: string,
   result: ApiResponse<any>
 ) => {
+  // TODO - revisar si el cache es por usuario o por app
   const cachedUri = cache.get(uri);
   if (cachedUri) {
     cachedUri.set(url, { timestamp: Date.now(), data: result });

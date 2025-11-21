@@ -16,6 +16,10 @@ export const styles = StyleSheet.create({
   avatarTextInverse: {
     color: colors.primary,
   },
+  border: {
+    borderWidth: 1,
+    borderColor: colors.primary,
+  },
   size_s: {
     width: 32,
     height: 32,

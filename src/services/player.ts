@@ -8,7 +8,9 @@ import {
   GET_POSITIONS_URI,
   GET_QUESTIONS_URI,
   SAVE_PLAYER_PUSH_TOKEN_URI,
+  UPDATE_PLAYER_PICTURE_URI,
   UPDATE_PLAYER_URI,
+  DELETE_PLAYER_PICTURE_URI,
 } from "../constants/api";
 import {
   Category,
@@ -18,7 +20,11 @@ import {
   PlayerPushTokenPayload,
   Position,
 } from "../types";
-import { CreatePlayerPayload, UpdatePlayerPayload } from "../types/api/Player";
+import {
+  CreatePlayerPayload,
+  ProfilePhotoPayload,
+  UpdatePlayerPayload,
+} from "../types/api/Player";
 import { Question } from "../types/player/Question";
 import { deleteApi, get, post, put } from "./api";
 import { EXTENDED_CACHE_TTL } from "./cache";
@@ -79,14 +85,47 @@ export const getQuestions = async () => {
 };
 
 export const createPlayer = async (data: CreatePlayerPayload) => {
+  const formData = new FormData();
+  formData.append("genderId", data.genderId.toString());
+  formData.append("positionId", data.positionId.toString());
+  formData.append("knowsCategory", JSON.stringify(data.knowsCategory));
+
+  if (data.phone) formData.append("phone", data.phone);
+  if (data.categoryId) formData.append("categoryId", data.categoryId.toString());
+  if (data.answers && data.answers.length > 0) {
+    formData.append("answers", JSON.stringify(data.answers));
+  }
+  if (data.profilePhoto) {
+    formData.append("profilePhoto", {
+      uri: data.profilePhoto.uri,
+      name: data.profilePhoto.name,
+      type: data.profilePhoto.type,
+    } as any);
+  }
+
   return await post<{ player: Player }>(CREATE_PLAYER_URI, {
-    body: data,
+    body: formData,
+    customHeaders: { "Content-Type": "multipart/form-data" },
   });
 };
 
 export const updatePlayer = async (data: UpdatePlayerPayload) => {
   return await put<{ player: Player }>(UPDATE_PLAYER_URI, {
     body: data,
+  });
+};
+
+export const updatePlayerPicture = async (photo: ProfilePhotoPayload) => {
+  const formData = new FormData();
+  formData.append("profilePhoto", {
+    uri: photo.uri,
+    name: photo.name,
+    type: photo.type,
+  } as any);
+
+  return await post<{ player: Player }>(UPDATE_PLAYER_PICTURE_URI, {
+    body: formData,
+    customHeaders: { "Content-Type": "multipart/form-data" },
   });
 };
 
@@ -104,4 +143,8 @@ export const savePlayerPushToken = async (data: PlayerPushTokenPayload) => {
 
 export const deletePlayer = async () => {
   return await deleteApi<{ deleted: boolean }>(DELETE_PLAYER_URI);
+};
+
+export const deletePlayerPicture = async () => {
+  return await deleteApi<{ deleted: boolean }>(DELETE_PLAYER_PICTURE_URI);
 };
