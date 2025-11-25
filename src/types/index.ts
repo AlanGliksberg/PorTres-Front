@@ -1,6 +1,10 @@
 export { ApiParams, ApiResponse } from "./api/Api";
 export { PageParams } from "./api/Common";
-export { CreateMatchBody, GetMatchesResponse } from "./api/Match";
+export {
+  CreateMatchBody,
+  GetMatchesResponse,
+  GetClubsResponse,
+} from "./api/Match";
 export { GetPlayerParams } from "./api/Player";
 export { ChangePasswordPayload as ChangePasswordDTO } from "./auth/ChangePasswordDTO";
 export { JWTPayload } from "./auth/JWTPayload";
@@ -15,6 +19,7 @@ export { MatchFilters } from "./match/MatchFilters";
 export { MatchResult } from "./match/MatchResult";
 export { Status } from "./match/Status";
 export { Set } from "./match/Set";
+export { Club } from "./match/Club";
 export {
   ModalContextData,
   ModalParams,

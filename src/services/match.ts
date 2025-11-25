@@ -15,9 +15,12 @@ import {
   CREATE_MATCH_RESULT_URI,
   REMOVE_PLAYER_FROM_MATCH_URI,
   DELETE_APPLICATION_URI,
+  GET_CLUBS_URI,
 } from "../constants/api";
 import {
+  Club,
   CreateMatchBody,
+  GetClubsResponse,
   GetMatchesResponse,
   MatchFilters,
   MatchResult,
@@ -25,6 +28,7 @@ import {
 } from "../types";
 import { CommonMatchResponse, UpdateMatchBody } from "../types/api/Match";
 import { deleteApi, get, post, put } from "./api";
+import { EXTENDED_CACHE_TTL } from "./cache";
 
 export const getCreatedMatches = async (
   page: number,
@@ -228,5 +232,12 @@ export const createMatchWithResult = async (
       teams: { team1, team2 },
       sets,
     },
+  });
+};
+
+export const getClubs = async () => {
+  return await get<GetClubsResponse>(GET_CLUBS_URI, {
+    withCache: true,
+    cacheTtl: EXTENDED_CACHE_TTL,
   });
 };

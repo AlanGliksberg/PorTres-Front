@@ -1,8 +1,12 @@
-import { Match } from "..";
+import { Match, Club } from "..";
 
 export type GetMatchesResponse = {
   matches: Match[];
   totalMatches: number;
+};
+
+export type GetClubsResponse = {
+  clubs: Club[];
 };
 
 export type CommonMatchResponse = {
