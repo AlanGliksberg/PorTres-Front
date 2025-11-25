@@ -25,4 +25,10 @@ export const styles = StyleSheet.create({
   teamsContainer: {
     marginTop: spacing.lg,
   },
+  manualToggleButton: {
+    marginTop: spacing.xs,
+  },
+  manualToggleText: {
+    color: colors.link,
+  },
 });

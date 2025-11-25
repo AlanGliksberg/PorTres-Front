@@ -16,7 +16,8 @@ export type CommonMatchResponse = {
 export type CreateMatchBody = {
   date: string;
   time: string;
-  location: string;
+  location?: string;
+  clubId?: number;
   description?: string;
   categoryId: number;
   pointsDeviation?: number;
@@ -27,6 +28,7 @@ export type CreateMatchBody = {
 
 export type UpdateMatchBody = {
   location?: string;
+  clubId?: number;
   description?: string;
   date?: string;
   time?: string;

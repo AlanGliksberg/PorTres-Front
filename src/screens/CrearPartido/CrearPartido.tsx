@@ -23,7 +23,6 @@ const CrearPartido: React.FC = () => {
 
   const onSubmit = async (form: MatchFormValues) => {
     const data: CreateMatchBody = {
-      location: form.name,
       description: form.description,
       date: dateToString(form.date!),
       time: timeToString(form.time!),
@@ -41,6 +40,11 @@ const CrearPartido: React.FC = () => {
             ?.players.map((p) => (p.id ? { id: p.id } : p)) || [],
       },
     };
+    if (form.clubId) {
+      data.clubId = form.clubId;
+    } else {
+      data.location = form.name;
+    }
     showLoading();
     const res = await createMatch(data);
     hideLoading();

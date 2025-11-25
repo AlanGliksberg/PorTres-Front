@@ -33,6 +33,7 @@ const EditarPartido: React.FC = () => {
   const { openErrorModal } = useContext(ModalContext);
 
   const initialValues: MatchFormValues = {
+    clubId: match.clubId ?? null,
     name: match.location,
     description: match.description || "",
     date: parseStringToDate(match.date),
@@ -45,7 +46,6 @@ const EditarPartido: React.FC = () => {
 
   const handleSubmit = async (values: MatchFormValues) => {
     const data: UpdateMatchBody = {
-      location: values.name,
       description: values.description,
       date: dateToString(values.date!),
       time: timeToString(values.time!),
@@ -63,6 +63,11 @@ const EditarPartido: React.FC = () => {
             ?.players.map((p) => (p.id ? { id: p.id } : p)) || [],
       },
     };
+    if (values.clubId) {
+      data.clubId = values.clubId;
+    } else {
+      data.location = values.name;
+    }
 
     showLoading();
     const res = await updateMatch(match.id, data);

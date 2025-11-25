@@ -1,7 +1,13 @@
 import validator from "../utils/customValidator";
 
 export const matchSchema = validator.object({
-  name: validator.string().isRequired(),
+  clubId: validator.number().nullable().optional(),
+  name: validator.string().when("clubId", (clubId, schema) => {
+    if (clubId === null || typeof clubId === "undefined") {
+      return schema.isRequired();
+    }
+    return schema;
+  }),
   description: validator.string().optional(),
   date: validator.date().isRequired(),
   time: validator.date().isRequired(),

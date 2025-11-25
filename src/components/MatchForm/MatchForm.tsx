@@ -1,6 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Controller, Resolver, useForm } from "react-hook-form";
-import { Keyboard, View, TouchableWithoutFeedback } from "react-native";
+import {
+  Keyboard,
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
 
 import useCategories from "@/src/hooks/useCategories";
 import useGenders from "@/src/hooks/useGenders";
@@ -16,6 +21,7 @@ import CustomTextInput from "../ui/CustomTextInput/CustomTextInput";
 import CustomTimePicker from "../ui/CustomTimePicker/CustomTimePicker";
 import FullButton from "../ui/FullButton/FullButton";
 import CourtDistribution from "./CourtDistribution";
+import ClubPicker from "./ClubPicker";
 import { styles } from "./MatchForm.styles";
 import { ModalContext } from "@/src/contexts/ModalContext";
 import { DURATIONS } from "@/src/constants/match";
@@ -37,6 +43,8 @@ const MatchForm: React.FC<MatchFormProps> = ({
     control,
     handleSubmit,
     watch,
+    setValue,
+    getValues,
     formState: { errors },
   } = useForm<MatchFormValues>({
     defaultValues: initialValues || matchFormDefaultValues,
@@ -46,7 +54,35 @@ const MatchForm: React.FC<MatchFormProps> = ({
   const { data: genders = [], loading: loadingGenders } = useGenders();
   const { data: allCategories = [], loading: loadingCats } = useCategories();
 
+  const manualLocationCache = useRef(initialValues?.name || "");
+  const isEditingWithoutClub =
+    blockKeyData && initialValues?.clubId == null ? true : false;
+  const [manualLocation, setManualLocation] =
+    useState<boolean>(isEditingWithoutClub);
+
   const selectedGender = watch("genderId");
+  const selectedClubId = watch("clubId");
+  const hasSelectedClub =
+    selectedClubId !== null && selectedClubId !== undefined;
+
+  const shouldShowClubPicker = !blockKeyData && !manualLocation;
+  const shouldShowLocationInput =
+    manualLocation || (blockKeyData && !hasSelectedClub);
+  const clubPickerError = !manualLocation
+    ? errors.name?.message || errors.clubId?.message
+    : errors.clubId?.message;
+
+  const handleEnableManualLocation = () => {
+    setManualLocation(true);
+    setValue("name", manualLocationCache.current || "");
+    setValue("clubId", null);
+  };
+
+  const handleReturnToClubSelection = () => {
+    manualLocationCache.current = getValues("name");
+    setManualLocation(false);
+    setValue("name", "");
+  };
   const categories = allCategories.filter((c) => c.genderId === selectedGender);
 
   const getNewTeams = (
@@ -90,22 +126,53 @@ const MatchForm: React.FC<MatchFormProps> = ({
         <View style={styles.card}>
           <CustomText.Title>Detalles</CustomText.Title>
 
-          {/* Nombre */}
-          <Controller
-            control={control}
-            name="name"
-            render={({ field: { onChange, value } }) => (
-              <CustomTextInput
-                label="Ubicación"
-                value={value}
-                onChangeText={onChange}
-                placeholder="Nombre o ubicación"
-                error={errors.name?.message}
-                mandatory
-                disabled={blockKeyData}
+          {/* Club */}
+          {shouldShowClubPicker && (
+            <Controller
+              control={control}
+              name="clubId"
+              render={({ field: { onChange, value } }) => (
+                <ClubPicker
+                  value={value}
+                  onChange={onChange}
+                  error={clubPickerError}
+                  mandatory={!manualLocation}
+                  onSwitchToManual={handleEnableManualLocation}
+                />
+              )}
+            />
+          )}
+
+          {/* Ubicación */}
+          {shouldShowLocationInput && (
+            <>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field: { onChange, value } }) => (
+                  <CustomTextInput
+                    label="Ubicación"
+                    value={value}
+                    onChangeText={onChange}
+                    placeholder="Nombre o dirección"
+                    error={errors.name?.message}
+                    mandatory
+                    disabled={blockKeyData}
+                  />
+                )}
               />
-            )}
-          />
+              {!blockKeyData && manualLocation && (
+                <TouchableOpacity
+                  style={styles.manualToggleButton}
+                  onPress={handleReturnToClubSelection}
+                >
+                  <CustomText type="small" style={styles.manualToggleText}>
+                    Quiero elegir un club
+                  </CustomText>
+                </TouchableOpacity>
+              )}
+            </>
+          )}
 
           {/* Descripción */}
           <Controller

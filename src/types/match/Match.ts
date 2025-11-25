@@ -12,6 +12,7 @@ export type Match = {
   dateTime: string;
   location: string;
   description: string | null;
+  clubId?: number | null;
   category: Category;
   pointsDeviation: number | null;
   status: Status;

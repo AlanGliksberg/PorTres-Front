@@ -1,6 +1,7 @@
 import { Team } from "../player/Team";
 
 export interface MatchFormValues {
+  clubId: number | null;
   name: string;
   description: string | undefined;
   date: Date | null;
@@ -11,7 +12,8 @@ export interface MatchFormValues {
   teams: Team[];
 }
 
-export const matchFormDefaultValues = {
+export const matchFormDefaultValues: MatchFormValues = {
+  clubId: null,
   name: "",
   description: "",
   date: null,
