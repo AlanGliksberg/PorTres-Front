@@ -42,3 +42,4 @@ app-example
 .env
 android
 certs/
+builds/
