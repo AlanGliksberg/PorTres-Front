@@ -151,7 +151,6 @@ const ClubPicker: React.FC<ClubPickerProps> = ({
               value={query}
               onChangeText={setQuery}
               placeholder="Buscar club"
-              autoFocus
               containerStyle={styles.searchField}
             />
             {filteredClubs.length ? (
