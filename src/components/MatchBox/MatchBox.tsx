@@ -31,6 +31,7 @@ import { styles } from "./MatchBox.styles";
 import StatusChip from "./StatusChip";
 import { MATCH_STATUS } from "@/src/constants/match";
 import { AppStackParamList } from "@/src/types/navigation/AppStack";
+import { APPLICATION_STATUS } from "@/src/constants/application";
 
 type MatchBoxNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<MeFaltaAlguienStackParamList>,
@@ -164,7 +165,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
     destructive?: boolean;
   }[] = [];
   if (showDetails) {
-    if (application) {
+    if (application && application.status.code === APPLICATION_STATUS.PENDING) {
       dropdownOptions.push({
         label: "Anular postulación",
         onPress: handleCancelApplication,
