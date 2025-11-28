@@ -14,7 +14,7 @@ import useGenders from "@/src/hooks/useGenders";
 import usePositions from "@/src/hooks/usePositions";
 import useQuestions from "@/src/hooks/useQuestions";
 import { createPlayer } from "@/src/services/player";
-import { colors } from "@/src/theme";
+import { colors, spacing } from "@/src/theme";
 import { CreatePlayerPayload } from "@/src/types/api/Player";
 import { REQUIRED_LABEL } from "@/src/utils/customValidator";
 import { Ionicons } from "@expo/vector-icons";
@@ -63,13 +63,16 @@ const Questonary: React.FC = () => {
     mode: "onChange",
   });
 
-  const selectedGender = watch("genderId");
+  const selectedGenderId = watch("genderId");
+  const selectedGender = genders.find((g) => g.id === selectedGenderId);
   const selectedPosition = watch("positionId");
   const knowsCategory = watch("knowsCategory");
   const [profilePhoto, setProfilePhoto] =
     useState<ImagePicker.ImagePickerAsset | null>(null);
 
-  const categories = allCategories.filter((c) => c.genderId === selectedGender);
+  const categories = allCategories.filter(
+    (c) => c.genderId === selectedGenderId
+  );
 
   const requestGalleryPermission = async () => {
     if (mediaPermission?.granted) return true;
@@ -179,7 +182,7 @@ const Questonary: React.FC = () => {
 
       <View style={styles.card}>
         <View style={styles.photoSection}>
-          <CustomText bold type="small" style={styles.photoLabel}>
+          <CustomText bold type="h4" style={styles.photoLabel}>
             Foto de perfil (opcional)
           </CustomText>
           <CustomText type="small" style={styles.photoSubtitle}>
@@ -299,16 +302,27 @@ const Questonary: React.FC = () => {
                 ]}
                 selected={value}
                 onSelect={onChange}
-                disabled={!selectedGender || !selectedPosition}
+                disabled={!selectedGenderId || !selectedPosition}
               />
             )}
           />
           {errors.knowsCategory && (
             <CustomText
               type="small"
-              style={{ color: colors.error, marginTop: 4 }}
+              style={{ color: colors.error, marginTop: spacing.xs }}
             >
               {errors.knowsCategory.message}
+            </CustomText>
+          )}
+
+          {knowsCategory === false && (
+            <CustomText type="small" style={{ marginTop: spacing.sm }}>
+              Respondiendo las preguntas serás categorizado entre las categorías
+              {selectedGender?.code === GENDER_CODE.CABALLERO
+                ? " C7-C9"
+                : selectedGender?.code === GENDER_CODE.DAMA
+                ? " D7-D9"
+                : " C7-C9/D7-D9"}
             </CustomText>
           )}
         </View>

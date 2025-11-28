@@ -3,7 +3,6 @@ import { Player } from "@/src/types";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import {
-  Modal,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
