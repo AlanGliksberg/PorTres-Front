@@ -39,7 +39,7 @@ export default function ProfileHeader({
   useEffect(() => {
     const loadMatchesCount = async () => {
       setLoadingMatchesCount(true);
-      const response = await getPlayedMatchesCount();
+      const response = await getPlayedMatchesCount(player?.id!);
       if (!response.error && response.data) {
         setMatchesCount(response.data.count);
       } else {
@@ -49,7 +49,7 @@ export default function ProfileHeader({
     };
 
     loadMatchesCount();
-  }, []);
+  }, [player]);
 
   const requestGalleryAccess = async () => {
     if (galleryPermission?.granted) return true;

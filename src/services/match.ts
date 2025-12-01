@@ -99,24 +99,31 @@ export const deleteApplicationFromMatch = async (matchId: number) => {
   });
 };
 
-export const getPlayedMatchesCount = async () => {
-  return await get<{ count: number }>(GET_PLAYED_MATCHES_COUNT_URI, {
-    withCache: true,
-  });
+export const getPlayedMatchesCount = async (playerId: number) => {
+  return await get<{ count: number }>(
+    `${GET_PLAYED_MATCHES_COUNT_URI}/${playerId}`,
+    {
+      withCache: true,
+    }
+  );
 };
 
 export const getPlayedMatches = async (
   page: number,
   pageSize: number,
+  playerId: number,
   withCache = true
 ) => {
   if (isNaN(page)) {
     page = 1;
   }
-  return await get<GetMatchesResponse>(GET_PLAYED_MATCHES_URI, {
-    queryParams: { page, pageSize },
-    withCache,
-  });
+  return await get<GetMatchesResponse>(
+    `${GET_PLAYED_MATCHES_URI}/${playerId}`,
+    {
+      queryParams: { page, pageSize },
+      withCache,
+    }
+  );
 };
 
 export const getAppliedMatches = async (

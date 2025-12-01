@@ -42,7 +42,7 @@ export default function ProfileTabs({
           />
         );
       case "historial":
-        return <MatchHistory historyRef={matchHistoryRef} />;
+        return <MatchHistory historyRef={matchHistoryRef} player={player} />;
       case "configuracion":
         return <Configuration />;
       default:
