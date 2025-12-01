@@ -11,6 +11,7 @@ import CustomModalView from "./CustomModalView";
 import FullButton from "../ui/FullButton/FullButton";
 import { navigationRef } from "@/src/navigation/navigationRef";
 import { AppStackParamList } from "@/src/types/navigation/AppStack";
+import { PlayerModalsContext } from "@/src/contexts/PlayerModalsContext";
 
 interface PlayerDetailsModalProps {
   player: Player | null;
@@ -23,6 +24,7 @@ const PlayerDetailsModal: React.FC<PlayerDetailsModalProps> = ({
   closePlayerDetail,
   removeCallback,
 }) => {
+  const { closeAllPlayerModals } = React.useContext(PlayerModalsContext);
   const onPressRemove = () => {
     closePlayerDetail();
     removeCallback?.();
@@ -31,7 +33,7 @@ const PlayerDetailsModal: React.FC<PlayerDetailsModalProps> = ({
   if (!player) return null;
 
   const goToProfile = () => {
-    closePlayerDetail();
+    closeAllPlayerModals();
     if (navigationRef.isReady()) {
       const currentRoute = navigationRef.getCurrentRoute();
       const currentName = currentRoute?.name;

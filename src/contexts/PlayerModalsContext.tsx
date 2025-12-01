@@ -13,6 +13,7 @@ import ApplyToMatchModal from "../components/Modals/ApplyToMatchModal";
 interface PlayerModalsContextData {
   openPlayerDetail: (player: Player, removeCallback?: () => void) => void;
   closePlayerDetail: () => void;
+  closeAllPlayerModals: () => void;
   openAddPlayerToMatch: (m: Match, t: number, c?: (p: Player) => void) => void;
   closeAddPlayerToMatch: () => void;
   openApplicationsModal: (
@@ -41,6 +42,7 @@ interface PlayerModalsContextData {
 export const PlayerModalsContext = createContext<PlayerModalsContextData>({
   openPlayerDetail: (p: Player) => {},
   closePlayerDetail: () => {},
+  closeAllPlayerModals: () => {},
   openAddPlayerToMatch: (m: Match, t: number, c?: (p: Player) => void) => {},
   closeAddPlayerToMatch: () => {},
   openApplicationsModal: (
@@ -85,6 +87,16 @@ export const PlayerModalsProvider: React.FC<{ children: ReactNode }> = ({
   const closePlayerDetail = () => {
     setSelectedPlayer(null);
     setRemovePlayerCallback(undefined);
+  };
+
+  const closeAllPlayerModals = () => {
+    closePlayerDetail();
+    closeAddPlayerToMatch();
+    closeApplicationsModal();
+    closeChangePasswordModal();
+    closeEditProfileModal();
+    closeApplyToMatchModal();
+    closeLoadResultModal();
   };
 
   // ==================== Add Player To Match Modal ====================
@@ -249,6 +261,7 @@ export const PlayerModalsProvider: React.FC<{ children: ReactNode }> = ({
       value={{
         openPlayerDetail,
         closePlayerDetail,
+        closeAllPlayerModals,
         openAddPlayerToMatch,
         closeAddPlayerToMatch,
         openApplicationsModal,
