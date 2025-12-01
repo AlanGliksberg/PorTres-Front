@@ -189,7 +189,7 @@ const PlayersList: React.FC<PlayersListProps> = ({ onPlayerSelect }) => {
               data={players}
               keyExtractor={(p) => p.id.toString()}
               style={styles.list}
-              keyboardShouldPersistTaps="never"
+              keyboardShouldPersistTaps="handled"
               renderItem={({ item }) => (
                 <PlayerItem player={item} onPlayerSelect={onPlayerSelect} />
               )}
