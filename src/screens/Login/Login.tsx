@@ -263,6 +263,31 @@ export default function Login() {
                   onPress={handleForgot}
                 /> */}
               </View>
+
+              <View style={styles.termsContainer}>
+                <CustomText type="small" style={styles.termsText}>
+                  Al continuar aceptás los{" "}
+                  <CustomText
+                    type="small"
+                    style={styles.termsLink}
+                    onPress={() => navigation.navigate("TermsAndConditions")}
+                  >
+                    Términos y Condiciones
+                  </CustomText>
+                  {" "}y la{" "}
+                  <CustomText
+                    type="small"
+                    style={styles.termsLink}
+                    onPress={() =>
+                      navigation.navigate("TermsAndConditions", {
+                        tab: "privacy",
+                      })
+                    }
+                  >
+                    Política de Privacidad
+                  </CustomText>
+                </CustomText>
+              </View>
             </View>
           </View>
         </View>

@@ -70,4 +70,15 @@ export const styles = StyleSheet.create({
     gap: spacing.sm,
     alignItems: "center",
   },
+  termsContainer: {
+    marginTop: spacing.sm,
+    alignItems: "center",
+  },
+  termsText: {
+    color: colors.description,
+    textAlign: "center",
+  },
+  termsLink: {
+    color: colors.primary,
+  },
 });

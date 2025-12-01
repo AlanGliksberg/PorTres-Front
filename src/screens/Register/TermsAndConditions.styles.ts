@@ -21,16 +21,69 @@ export const styles = StyleSheet.create({
     fontSize: typography.h1,
     color: colors.primary,
     textAlign: "center",
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
   },
-  content: {
+  tabContainer: {
+    flexDirection: "row",
+    gap: spacing.sm,
+    marginBottom: spacing.md,
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    borderRadius: 12,
+    backgroundColor: colors.surface,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: colors.border || colors.surface,
+  },
+  tabButtonActive: {
+    backgroundColor: "#e8f1ff",
+    borderColor: colors.primary,
+  },
+  tabText: {
+    color: colors.text,
+  },
+  tabTextActive: {
+    color: colors.primary,
+    fontWeight: "600",
+  },
+  scrollContent: {
+    gap: spacing.md,
+    paddingBottom: spacing.xl,
+  },
+  card: {
     backgroundColor: colors.surface,
     borderRadius: 16,
     padding: spacing.lg,
-    gap: spacing.md,
+    gap: spacing.sm,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  updateDate: {
+    color: colors.description,
+    textAlign: "center",
+    marginBottom: spacing.sm,
   },
   paragraph: {
     color: colors.text,
-    lineHeight: 20,
+    lineHeight: 22,
+    fontSize: typography.body,
+  },
+  subTitle: {
+    fontSize: typography.h2,
+    color: colors.primary,
+    textAlign: "center",
+    marginBottom: spacing.xs,
+  },
+  sectionTitle: {
+    color: colors.primary,
+    fontSize: typography.h3,
+    marginTop: spacing.md,
+    marginBottom: spacing.xs,
+    textTransform: "uppercase",
   },
 });
