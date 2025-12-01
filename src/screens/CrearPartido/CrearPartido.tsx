@@ -3,6 +3,7 @@ import { LoadingContext } from "@/src/contexts/LoadingContext";
 import { ModalContext } from "@/src/contexts/ModalContext";
 import { removeLiveMatchesCache } from "@/src/services/cache";
 import { createMatch } from "@/src/services/match";
+import { clearMatchDraft } from "@/src/services/matchDraft";
 import {
   CreateMatchBody,
   MatchFormValues,
@@ -66,6 +67,7 @@ const CrearPartido: React.FC = () => {
         );
       }
     } else {
+      clearMatchDraft();
       removeLiveMatchesCache();
       navigation.navigate("MeFaltaAlguien");
     }

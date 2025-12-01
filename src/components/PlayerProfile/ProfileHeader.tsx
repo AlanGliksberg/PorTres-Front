@@ -21,13 +21,14 @@ import { removeAllMatchesCache } from "@/src/services/cache";
 interface ProfileHeaderProps {
   player: Player | null;
   onPhotoUpdated?: () => void;
+  readOnly: boolean;
 }
 
 export default function ProfileHeader({
   player,
   onPhotoUpdated,
+  readOnly = true,
 }: ProfileHeaderProps) {
-  const { user } = useContext(AuthContext);
   const { openErrorModal, openModal } = useContext(ModalContext);
   const { showLoading, hideLoading } = useContext(LoadingContext);
   const [matchesCount, setMatchesCount] = useState<number | string>(0);
@@ -159,33 +160,37 @@ export default function ProfileHeader({
     <View style={styles.profileHeader}>
       <View style={styles.avatarContainer}>
         <PlayerAvatar player={player} size="xl" touchable={false} />
-        <View style={styles.avatarActions}>
-          {player?.user?.photoUrl && (
+        {!readOnly && (
+          <View style={styles.avatarActions}>
+            {player?.user?.photoUrl && (
+              <TouchableOpacity
+                style={[styles.avatarActionButton, styles.deleteAvatarButton]}
+                onPress={handleRemovePhoto}
+              >
+                <MaterialIcons name="delete" size={16} color={colors.white} />
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
-              style={[styles.avatarActionButton, styles.deleteAvatarButton]}
-              onPress={handleRemovePhoto}
+              style={[
+                styles.avatarActionButton,
+                styles.editAvatarButton,
+                !player?.user?.photoUrl ? styles.soloIcon : null,
+              ]}
+              onPress={handleEditPhoto}
             >
-              <MaterialIcons name="delete" size={16} color={colors.white} />
+              <MaterialIcons name="edit" size={16} color={colors.white} />
             </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            style={[
-              styles.avatarActionButton,
-              styles.editAvatarButton,
-              !player?.user?.photoUrl ? styles.soloIcon : null,
-            ]}
-            onPress={handleEditPhoto}
-          >
-            <MaterialIcons name="edit" size={16} color={colors.white} />
-          </TouchableOpacity>
-        </View>
+          </View>
+        )}
       </View>
 
       <View style={styles.profileInfo}>
         <CustomText style={styles.playerName}>
           {player?.firstName || "S/I"} {player?.lastName}
         </CustomText>
-        <CustomText style={styles.playerEmail}>{user?.email}</CustomText>
+        <CustomText style={styles.playerEmail}>
+          {!readOnly && player?.user?.email}
+        </CustomText>
         <View style={styles.playerStats}>
           <View style={styles.statItem}>
             <CustomText style={styles.statValue}>

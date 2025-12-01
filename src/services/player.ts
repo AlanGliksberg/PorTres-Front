@@ -2,7 +2,7 @@ import {
   CREATE_PLAYER_URI,
   DELETE_PLAYER_URI,
   GET_CATEGORIES_URI,
-  GET_CURRENT_PLAYER_URI,
+  GET_PLAYER_DETAILS_URI,
   GET_GENDERS_URI,
   GET_PLAYERS_URI,
   GET_POSITIONS_URI,
@@ -91,7 +91,8 @@ export const createPlayer = async (data: CreatePlayerPayload) => {
   formData.append("knowsCategory", JSON.stringify(data.knowsCategory));
 
   if (data.phone) formData.append("phone", data.phone);
-  if (data.categoryId) formData.append("categoryId", data.categoryId.toString());
+  if (data.categoryId)
+    formData.append("categoryId", data.categoryId.toString());
   if (data.answers && data.answers.length > 0) {
     formData.append("answers", JSON.stringify(data.answers));
   }
@@ -129,10 +130,13 @@ export const updatePlayerPicture = async (photo: ProfilePhotoPayload) => {
   });
 };
 
-export const getCurrentPlayer = async (withCache = true) => {
-  return await get<{ player: Player }>(GET_CURRENT_PLAYER_URI, {
-    withCache,
-  });
+export const getPlayerDetails = async (playerId: number, withCache = true) => {
+  return await get<{ player: Player }>(
+    `${GET_PLAYER_DETAILS_URI}/${playerId}`,
+    {
+      withCache,
+    }
+  );
 };
 
 export const savePlayerPushToken = async (data: PlayerPushTokenPayload) => {

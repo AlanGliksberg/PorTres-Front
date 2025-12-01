@@ -1,5 +1,5 @@
 import {
-  GET_CURRENT_PLAYER_URI,
+  GET_PLAYER_DETAILS_URI,
   GET_PLAYED_MATCHES_COUNT_URI,
   GET_PLAYED_MATCHES_URI,
   GET_CREATED_MATCHES_URI,
@@ -58,7 +58,7 @@ export const removeGetPlayedMatchesCache = () => {
 };
 
 export const removeGetCurrentPlayerCache = () => {
-  removeCache(GET_CURRENT_PLAYER_URI);
+  removeCache(GET_PLAYER_DETAILS_URI);
 };
 
 export const removePlayedCountCache = () => {

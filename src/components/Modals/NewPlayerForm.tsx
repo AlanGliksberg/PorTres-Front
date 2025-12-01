@@ -38,7 +38,9 @@ const NewPlayerForm: React.FC<NewPlayerFormProps> = ({ onAddNewPlayer }) => {
       firstName: firstName.trim(),
       lastName: lastName.trim(),
       categoryId,
+      category: categories.find((c) => c.id === categoryId),
       genderId,
+      gender: genders.find((g) => g.id === genderId),
       phone: phone.trim() || null,
     } as Player;
 

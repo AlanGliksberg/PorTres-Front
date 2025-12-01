@@ -5,5 +5,12 @@ export type AppStackParamList = {
   Home: undefined;
   QuieroJugar: undefined;
   MeFaltaAlguienStack: NavigatorScreenParams<MeFaltaAlguienStackParamList>;
-  MiPerfil: undefined;
+  MiPerfil:
+    | {
+        playerId?: number;
+        readOnly?: boolean;
+        returnToTab?: keyof AppStackParamList;
+        returnToParams?: unknown;
+      }
+    | undefined;
 };

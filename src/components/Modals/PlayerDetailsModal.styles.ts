@@ -41,11 +41,14 @@ export const styles = StyleSheet.create({
     marginLeft: spacing.sm,
     flexShrink: 1,
   },
+  content: {
+    marginVertical: spacing.md,
+    gap: spacing.md
+  },
   row: {
     width: "100%",
     flexDirection: "row",
     flexShrink: 1,
-    marginTop: spacing.md,
     paddingHorizontal: spacing.md,
   },
   rowItem: {
@@ -56,8 +59,8 @@ export const styles = StyleSheet.create({
   buttonContainer: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "space-around",
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
+    paddingBottom: spacing.md,
   },
 });

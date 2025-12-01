@@ -37,13 +37,13 @@ export default function MatchHistory({ historyRef }: MatchHistoryProps) {
   const Empty = (
     <View style={styles.emptyState}>
       <CustomText style={styles.emptyStateText} type="body">
-        No tenés partidos registrados aún
+        Todavía no hay partidos registrados
       </CustomText>
       <CustomText
         style={[styles.emptyStateText, styles.emptyStateSubtext]}
         type="medium"
       >
-        Cuando juegues partidos aparecerán aquí
+        Cuando se complete un partido va a aparecer acá
       </CustomText>
     </View>
   );

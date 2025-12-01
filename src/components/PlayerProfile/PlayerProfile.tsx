@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { RefreshControl, ScrollView } from "react-native";
-import { getCurrentPlayer } from "@/src/services/player";
+import { getPlayerDetails } from "@/src/services/player";
 import { Player } from "@/src/types/player/Player";
 import { styles } from "./PlayerProfile.styles";
 import ProfileHeader from "./ProfileHeader";
@@ -17,9 +17,13 @@ import type { TabType } from "./ProfileTabs";
 
 interface PlayerProfileProps {
   playerId: number;
+  readOnly?: boolean;
 }
 
-export default function PlayerProfile({ playerId }: PlayerProfileProps) {
+export default function PlayerProfile({
+  playerId,
+  readOnly = false,
+}: PlayerProfileProps) {
   const [player, setPlayer] = useState<Player | null>(null);
   const { hideLoading, showLoading, loading } = useContext(LoadingContext);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +35,7 @@ export default function PlayerProfile({ playerId }: PlayerProfileProps) {
     try {
       showLoading();
       setError(null);
-      const playerResponse = await getCurrentPlayer(false);
+      const playerResponse = await getPlayerDetails(playerId, false);
       if (playerResponse.error || !playerResponse.data) {
         setError("Error al cargar los datos del jugador");
         return;
@@ -44,11 +48,11 @@ export default function PlayerProfile({ playerId }: PlayerProfileProps) {
     } finally {
       hideLoading();
     }
-  }, []);
+  }, [hideLoading, playerId, showLoading]);
 
   useEffect(() => {
     loadPlayerData();
-  }, [loadPlayerData, playerId]);
+  }, [playerId]);
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -75,13 +79,18 @@ export default function PlayerProfile({ playerId }: PlayerProfileProps) {
         <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
       }
     >
-      <ProfileHeader player={player} onPhotoUpdated={loadPlayerData} />
+      <ProfileHeader
+        player={player}
+        onPhotoUpdated={loadPlayerData}
+        readOnly={readOnly}
+      />
       <ProfileTabs
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         player={player}
         handleRefresh={handleRefresh}
         matchHistoryRef={matchHistoryRef}
+        readOnly={readOnly}
       />
     </ScrollView>
   );

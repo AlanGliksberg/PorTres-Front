@@ -12,8 +12,9 @@ import NewPlayerForm from "./NewPlayerForm";
 import PlayersList from "../PlayersList/PlayersList";
 import CustomText from "../ui/CustomText/CustomText";
 import { styles } from "./AddPlayerToMatchModal.styles";
-import { getCurrentPlayer } from "@/src/services/player";
+import { getPlayerDetails } from "@/src/services/player";
 import CustomModalView from "./CustomModalView";
+import useUser from "@/src/hooks/useUser";
 
 interface PlayerDetailsModalProps {
   isOpen: boolean;
@@ -33,6 +34,7 @@ const AddPlayerToMatchModal: React.FC<PlayerDetailsModalProps> = ({
   onPlayerAdd,
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>("existing");
+  const { user } = useUser();
 
   useEffect(() => {
     if (isOpen) {
@@ -41,7 +43,7 @@ const AddPlayerToMatchModal: React.FC<PlayerDetailsModalProps> = ({
   }, [isOpen]);
 
   const handleAddMyself = async () => {
-    const res = await getCurrentPlayer();
+    const res = await getPlayerDetails(user?.playerId!);
     if (res.error || !res.data) {
       // TODO - modal de error inesperado
       return;

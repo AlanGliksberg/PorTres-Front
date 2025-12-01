@@ -12,11 +12,13 @@ import { PlayerModalsContext } from "@/src/contexts/PlayerModalsContext";
 interface PersonalInfoProps {
   player: Player | null;
   handleRefresh: () => void;
+  readOnly: boolean;
 }
 
 export default function PersonalInfo({
   player,
   handleRefresh,
+  readOnly = true,
 }: PersonalInfoProps) {
   const { openEditProfileModal } = useContext(PlayerModalsContext);
 
@@ -31,9 +33,11 @@ export default function PersonalInfo({
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <CustomText style={styles.sectionTitle}>Datos Personales</CustomText>
-          <TouchableOpacity onPress={onEditProfile}>
-            <MaterialIcons name="edit" size={20} color={colors.primary} />
-          </TouchableOpacity>
+          {!readOnly && (
+            <TouchableOpacity onPress={onEditProfile}>
+              <MaterialIcons name="edit" size={20} color={colors.primary} />
+            </TouchableOpacity>
+          )}
         </View>
 
         <View style={styles.detailsContainer}>
@@ -50,12 +54,14 @@ export default function PersonalInfo({
             </CustomText>
           </View>
 
-          <View style={styles.detailRow}>
-            <MaterialIcons name="phone" size={20} color={colors.primary} />
-            <CustomText style={styles.detailText}>
-              {player?.phone || "No especificado"}
-            </CustomText>
-          </View>
+          {!readOnly && (
+            <View style={styles.detailRow}>
+              <MaterialIcons name="phone" size={20} color={colors.primary} />
+              <CustomText style={styles.detailText}>
+                {player?.phone || "No especificado"}
+              </CustomText>
+            </View>
+          )}
 
           <View style={styles.detailRow}>
             <MaterialCommunityIcons

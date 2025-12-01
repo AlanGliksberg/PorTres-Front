@@ -13,6 +13,7 @@ interface CustomScreenProps {
   title: string;
   showBack?: boolean;
   loading?: boolean;
+  onBack?: () => void;
 }
 
 const CustomScreen: React.FC<CustomScreenProps> = ({
@@ -20,6 +21,7 @@ const CustomScreen: React.FC<CustomScreenProps> = ({
   title,
   showBack = false,
   loading = false,
+  onBack,
 }) => {
   const navigation = useNavigation();
 
@@ -28,16 +30,16 @@ const CustomScreen: React.FC<CustomScreenProps> = ({
       style={styles.container}
       edges={["top", "left", "right"]}
     >
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          {showBack ? (
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.backButton}
-            >
-              <MaterialIcons name="arrow-back" size={22} color="#fff" />
-            </TouchableOpacity>
-          ) : (
+        <View style={styles.header}>
+          <View style={styles.headerContent}>
+            {showBack ? (
+              <TouchableOpacity
+                onPress={() => (onBack ? onBack() : navigation.goBack())}
+                style={styles.backButton}
+              >
+                <MaterialIcons name="arrow-back" size={22} color="#fff" />
+              </TouchableOpacity>
+            ) : (
             <View style={styles.backPlaceholder} />
           )}
           <CustomText style={styles.title}>{title}</CustomText>

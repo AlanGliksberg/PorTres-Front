@@ -227,12 +227,12 @@ export const PlayerModalsProvider: React.FC<{ children: ReactNode }> = ({
 
   const openLoadResultModal = (
     match: Match | null,
-    readonly = false,
+    readOnly = false,
     onSave?: () => Promise<void>
   ) => {
     setMatchForResult(match);
     setSaveResultCallback(() => onSave);
-    setReadOnly(readonly);
+    setReadOnly(readOnly);
     setShowLoadResultModal(true);
   };
 

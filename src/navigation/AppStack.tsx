@@ -104,7 +104,15 @@ export function AppStack() {
             <MaterialIcons name="person" size={size} color={color} />
           ),
         }}
-        listeners={createTabPressListener("MiPerfil")}
+        listeners={({ navigation }) => ({
+          tabPress: (event: { preventDefault: () => void }) => {
+            event.preventDefault();
+            navigation.navigate("MiPerfil", {
+              playerId: undefined,
+              readOnly: false,
+            });
+          },
+        })}
       />
     </Tab.Navigator>
   );

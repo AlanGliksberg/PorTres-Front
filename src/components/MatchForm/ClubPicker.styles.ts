@@ -21,7 +21,7 @@ export const clubPickerStyles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
-    minHeight: 48,
+    minHeight: 42,
     justifyContent: "center",
     width: "100%",
   },

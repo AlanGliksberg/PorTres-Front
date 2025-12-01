@@ -25,6 +25,7 @@ import ClubPicker from "./ClubPicker";
 import { styles } from "./MatchForm.styles";
 import { ModalContext } from "@/src/contexts/ModalContext";
 import { DURATIONS } from "@/src/constants/match";
+import { getMatchDraft, setMatchDraft } from "@/src/services/matchDraft";
 
 export type MatchFormProps = {
   initialValues?: MatchFormValues;
@@ -47,7 +48,8 @@ const MatchForm: React.FC<MatchFormProps> = ({
     getValues,
     formState: { errors },
   } = useForm<MatchFormValues>({
-    defaultValues: initialValues || matchFormDefaultValues,
+    defaultValues:
+      initialValues || getMatchDraft() || matchFormDefaultValues,
     resolver: yupResolver(matchSchema) as Resolver<MatchFormValues>,
   });
 
@@ -119,6 +121,11 @@ const MatchForm: React.FC<MatchFormProps> = ({
     );
     return updatedTeams;
   };
+
+  React.useEffect(() => {
+    const subscription = watch((values) => setMatchDraft(values as MatchFormValues));
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

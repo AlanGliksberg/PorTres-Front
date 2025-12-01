@@ -2,16 +2,15 @@ import { colors } from "@/src/theme";
 import { Player } from "@/src/types";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import {
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import PlayerAvatar from "../PlayerAvatar/PlayerAvatar";
 import CustomText from "../ui/CustomText/CustomText";
 import SimpleButton from "../ui/SimpleButton/SimpleButton";
 import { styles } from "./PlayerDetailsModal.styles";
 import CustomModalView from "./CustomModalView";
+import FullButton from "../ui/FullButton/FullButton";
+import { navigationRef } from "@/src/navigation/navigationRef";
+import { AppStackParamList } from "@/src/types/navigation/AppStack";
 
 interface PlayerDetailsModalProps {
   player: Player | null;
@@ -30,6 +29,40 @@ const PlayerDetailsModal: React.FC<PlayerDetailsModalProps> = ({
   };
 
   if (!player) return null;
+
+  const goToProfile = () => {
+    closePlayerDetail();
+    if (navigationRef.isReady()) {
+      const currentRoute = navigationRef.getCurrentRoute();
+      const currentName = currentRoute?.name;
+
+      let returnToTab: keyof AppStackParamList | undefined;
+      let returnToParams: any;
+
+      if (
+        currentName === "Home" ||
+        currentName === "QuieroJugar" ||
+        currentName === "MiPerfil" ||
+        currentName === "MeFaltaAlguienStack"
+      ) {
+        returnToTab = currentName as keyof AppStackParamList;
+        returnToParams = currentRoute?.params;
+      } else if (
+        currentName === "MeFaltaAlguien" ||
+        currentName === "CrearPartido" ||
+        currentName === "EditarPartido"
+      ) {
+        returnToTab = "MeFaltaAlguienStack";
+        returnToParams = { screen: currentName, params: currentRoute?.params };
+      }
+      (navigationRef as any).navigate("MiPerfil", {
+        playerId: player.id,
+        readOnly: true,
+        returnToTab,
+        returnToParams,
+      });
+    }
+  };
 
   return (
     <CustomModalView
@@ -60,50 +93,51 @@ const PlayerDetailsModal: React.FC<PlayerDetailsModalProps> = ({
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={styles.row}>
-              <View style={styles.rowItem}>
-                <CustomText type="medium" bold>
-                  Género:{" "}
-                </CustomText>
-                <CustomText type="small">
-                  {player.gender?.name || "No informado"}
-                </CustomText>
+            <View style={styles.content}>
+              <View style={styles.row}>
+                <View style={styles.rowItem}>
+                  <CustomText type="medium" bold>
+                    Género:{" "}
+                  </CustomText>
+                  <CustomText type="small">
+                    {player.gender?.name || "No informado"}
+                  </CustomText>
+                </View>
+                <View style={styles.rowItem}>
+                  <CustomText type="medium" bold>
+                    Posición:{" "}
+                  </CustomText>
+                  <CustomText type="small">
+                    {player.position?.description || "No informado"}
+                  </CustomText>
+                </View>
               </View>
-              <View style={styles.rowItem}>
-                <CustomText type="medium" bold>
-                  Posición:{" "}
-                </CustomText>
-                <CustomText type="small">
-                  {player.position?.description || "No informado"}
-                </CustomText>
-              </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.rowItem}>
-                <CustomText type="medium" bold>
-                  Categoría:{" "}
-                </CustomText>
-                <CustomText type="small">
-                  {player.category?.description || "No informado"}
-                </CustomText>
-              </View>
-              <View style={styles.rowItem}>
-                <CustomText type="medium" bold>
-                  Teléfono:{" "}
-                </CustomText>
-                <CustomText type="small">
-                  {player.phone || "No informado"}
-                </CustomText>
+              <View style={styles.row}>
+                <View style={styles.rowItem}>
+                  <CustomText type="medium" bold>
+                    Categoría:{" "}
+                  </CustomText>
+                  <CustomText type="small">
+                    {player.category?.description || "No informado"}
+                  </CustomText>
+                </View>
               </View>
             </View>
-            {removeCallback && (
-              <View style={styles.buttonContainer}>
+            <View style={styles.buttonContainer}>
+              {player.userId && (
+                <FullButton onPress={goToProfile} size="s">
+                  <CustomText.ButtonText type="small">
+                    Ver perfil
+                  </CustomText.ButtonText>
+                </FullButton>
+              )}
+              {removeCallback && (
                 <SimpleButton
                   title="Eliminar de partido"
                   onPress={onPressRemove}
                 />
-              </View>
-            )}
+              )}
+            </View>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>

@@ -19,6 +19,7 @@ interface ProfileTabsProps {
   matchHistoryRef?: RefObject<MatchesListRef | null>;
   activeTab: TabType;
   setActiveTab: Dispatch<SetStateAction<TabType>>;
+  readOnly: boolean;
 }
 
 export default function ProfileTabs({
@@ -27,19 +28,31 @@ export default function ProfileTabs({
   matchHistoryRef,
   activeTab,
   setActiveTab,
+  readOnly = true,
 }: ProfileTabsProps) {
-
   // TODO - usar loading
   const renderTabContent = () => {
     switch (activeTab) {
       case "personal":
-        return <PersonalInfo player={player} handleRefresh={handleRefresh} />;
+        return (
+          <PersonalInfo
+            player={player}
+            handleRefresh={handleRefresh}
+            readOnly={readOnly}
+          />
+        );
       case "historial":
         return <MatchHistory historyRef={matchHistoryRef} />;
       case "configuracion":
         return <Configuration />;
       default:
-        return <PersonalInfo player={player} handleRefresh={handleRefresh} />;
+        return (
+          <PersonalInfo
+            player={player}
+            handleRefresh={handleRefresh}
+            readOnly={readOnly}
+          />
+        );
     }
   };
 
@@ -88,31 +101,33 @@ export default function ProfileTabs({
           </CustomText>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[
-            styles.tab,
-            activeTab === "configuracion" && styles.activeTab,
-          ]}
-          onPress={() => setActiveTab("configuracion")}
-        >
-          <MaterialIcons
-            name="settings"
-            size={20}
-            color={
-              activeTab === "configuracion"
-                ? colors.primary
-                : colors.description
-            }
-          />
-          <CustomText
+        {!readOnly && (
+          <TouchableOpacity
             style={[
-              styles.tabText,
-              activeTab === "configuracion" && styles.activeTabText,
+              styles.tab,
+              activeTab === "configuracion" && styles.activeTab,
             ]}
+            onPress={() => setActiveTab("configuracion")}
           >
-            Configuración
-          </CustomText>
-        </TouchableOpacity>
+            <MaterialIcons
+              name="settings"
+              size={20}
+              color={
+                activeTab === "configuracion"
+                  ? colors.primary
+                  : colors.description
+              }
+            />
+            <CustomText
+              style={[
+                styles.tabText,
+                activeTab === "configuracion" && styles.activeTabText,
+              ]}
+            >
+              Configuración
+            </CustomText>
+          </TouchableOpacity>
+        )}
       </View>
 
       {renderTabContent()}
