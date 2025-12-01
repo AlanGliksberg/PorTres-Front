@@ -103,7 +103,7 @@ export const getPlayedMatchesCount = async (playerId: number) => {
   return await get<{ count: number }>(
     `${GET_PLAYED_MATCHES_COUNT_URI}/${playerId}`,
     {
-      withCache: true,
+      withCache: false,
     }
   );
 };
@@ -121,7 +121,7 @@ export const getPlayedMatches = async (
     `${GET_PLAYED_MATCHES_URI}/${playerId}`,
     {
       queryParams: { page, pageSize },
-      withCache,
+      withCache: false,
     }
   );
 };

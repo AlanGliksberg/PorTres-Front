@@ -34,6 +34,8 @@ interface MatchesListProps {
   allowApplications?: boolean;
   allowResults?: boolean;
   historyDetails?: boolean;
+  consultingPlayerId?: number;
+  readOnly?: boolean;
 }
 
 export interface MatchesListRef {
@@ -53,6 +55,8 @@ const MatchesList = forwardRef<MatchesListRef, MatchesListProps>(
       allowApplications,
       allowResults,
       historyDetails,
+      consultingPlayerId,
+      readOnly = false,
     },
     ref
   ) => {
@@ -156,6 +160,8 @@ const MatchesList = forwardRef<MatchesListRef, MatchesListProps>(
                   onApplicationSuccess={onApplicationSuccess}
                   allowResults={allowResults}
                   historyDetails={historyDetails}
+                  consultedPlayerId={consultingPlayerId}
+                  readOnly={readOnly}
                 />
               ) : (
                 <MatchBoxSkeleton key={`skeleton-${i}`} />

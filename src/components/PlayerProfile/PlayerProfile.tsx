@@ -52,6 +52,7 @@ export default function PlayerProfile({
 
   useEffect(() => {
     loadPlayerData();
+    setActiveTab("personal");
   }, [playerId]);
 
   const handleRefresh = useCallback(async () => {

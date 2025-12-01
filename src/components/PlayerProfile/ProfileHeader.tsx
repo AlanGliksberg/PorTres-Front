@@ -39,13 +39,17 @@ export default function ProfileHeader({
   useEffect(() => {
     const loadMatchesCount = async () => {
       setLoadingMatchesCount(true);
-      const response = await getPlayedMatchesCount(player?.id!);
-      if (!response.error && response.data) {
-        setMatchesCount(response.data.count);
-      } else {
-        setMatchesCount("S/I");
+      if (player?.id) {
+        {
+          const response = await getPlayedMatchesCount(player.id);
+          if (!response.error && response.data) {
+            setMatchesCount(response.data.count);
+          } else {
+            setMatchesCount("S/I");
+          }
+          setLoadingMatchesCount(false);
+        }
       }
-      setLoadingMatchesCount(false);
     };
 
     loadMatchesCount();

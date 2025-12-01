@@ -68,6 +68,8 @@ export default function MatchHistory({
           historyDetails
           allowResults
           refreshData={async () => removeGetPlayedMatchesCache()}
+          consultingPlayerId={player?.id}
+          readOnly
         />
       </View>
     </View>

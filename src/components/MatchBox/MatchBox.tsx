@@ -46,6 +46,8 @@ interface MatchBoxProps {
   onApplicationSuccess?: (match: Match) => void;
   allowResults?: boolean;
   historyDetails?: boolean;
+  consultedPlayerId?: number;
+  readOnly: boolean;
 }
 
 const MatchBox: React.FC<MatchBoxProps> = ({
@@ -56,22 +58,27 @@ const MatchBox: React.FC<MatchBoxProps> = ({
   onApplicationSuccess,
   allowResults = false,
   historyDetails = false,
+  consultedPlayerId,
+  readOnly,
 }) => {
   const { user } = useContext(AuthContext);
   const { openModal } = useContext(ModalContext);
   const { openApplicationsModal, openApplyToMatchModal, openLoadResultModal } =
     useContext(PlayerModalsContext);
   const navigation = useNavigation<MatchBoxNavigationProp>();
+
+  const playerId = consultedPlayerId || user?.playerId;
+
   const isCreator = user?.playerId === match.creatorPlayerId;
   const application = match.applications?.find(
     (a) => a.playerId === user?.playerId
   );
   const isPlayer = match.players?.some((p) => p.id === user?.playerId);
   const playerTeamNumber = match.teams.find((t) =>
-    t.players.some((p) => p.id === user?.playerId)
+    t.players.some((p) => p.id === playerId)
   )?.teamNumber;
   const rankingChange = match.playerRankingChange?.find(
-    (prc) => prc.playerId === user?.playerId
+    (prc) => prc.playerId === playerId
   )?.deltaPoints;
   const rankingChangeLabel = !rankingChange
     ? "0"
@@ -98,7 +105,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
       message: `¿Estás seguro que te querés dar de baja del partido en ${match.location}?`,
       primaryLabel: "Sí, bajarme",
       primaryAction: async () => {
-        await deletePlayerFromMatch(match.id, user?.playerId!);
+        await deletePlayerFromMatch(match.id, playerId!);
         refreshData && (await refreshData());
       },
     });
@@ -258,7 +265,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
             match={match}
             team={1}
             callback={refreshData}
-            canDelete={showDetails}
+            canDelete={!readOnly && showDetails}
             removeCallback={refreshData}
             handleApply={handleApply}
           />
@@ -269,7 +276,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
             match={match}
             team={2}
             callback={refreshData}
-            canDelete={showDetails}
+            canDelete={!readOnly && showDetails}
             removeCallback={refreshData}
             handleApply={handleApply}
           />
@@ -291,15 +298,16 @@ const MatchBox: React.FC<MatchBoxProps> = ({
               type="match"
             />
           )}
-          {showDetails && match.status.code !== MATCH_STATUS.CANCELLED && (
-            <DropdownMenu options={dropdownOptions} />
-          )}
+          {showDetails &&
+            match.status.code !== MATCH_STATUS.CANCELLED &&
+            !readOnly && <DropdownMenu options={dropdownOptions} />}
         </View>
         <View style={styles.row}>
           {isCreator &&
             showDetails &&
             match.status.code === MATCH_STATUS.PENDING &&
-            match.applications && (
+            match.applications &&
+            !readOnly && (
               <BorderedButton size="xl" onPress={handleApplications}>
                 <CustomText type="xsmall" style={styles.applicationsButtonText}>
                   Postulaciones
@@ -311,7 +319,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
                 </View>
               </BorderedButton>
             )}
-          {application && (
+          {application && !readOnly && (
             <View style={styles.applicationContainer}>
               <CustomText type="small">Postulación:</CustomText>
               <StatusChip
@@ -326,6 +334,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
             !application &&
             !isPlayer &&
             !isCreator &&
+            !readOnly &&
             match.status.code === MATCH_STATUS.PENDING && (
               <BorderedButton
                 size="xl"
@@ -337,8 +346,9 @@ const MatchBox: React.FC<MatchBoxProps> = ({
               </BorderedButton>
             )}
           {allowResults &&
-            (!match.resultLoadedByTeam ? (
-              // Si no tiene ningún resultado cargado dejo cargar el resultado
+            (!match.resultLoadedByTeam &&
+            (!consultedPlayerId || consultedPlayerId === user?.playerId) ? (
+              // Si no tiene ningún resultado cargado
               <BorderedButton
                 size="xl"
                 onPress={() => openLoadResultModal(match, false, refreshData)}
@@ -357,21 +367,28 @@ const MatchBox: React.FC<MatchBoxProps> = ({
                   Ver resultado
                 </CustomText>
               </BorderedButton>
-            ) : match.resultLoadedByTeam === playerTeamNumber ? (
-              // si el resultado fue cargado por mi equipo, tengo que esperar aprobación del otro equipo
-              <CustomText type="xsmall" style={styles.resultsButtonText}>
-                Esperando aprobación de resultado
-              </CustomText>
-            ) : (
-              // El resultado fue cargado por el otro equipo, tengo que aprobarlo o rechazarlo
-              <BorderedButton
-                size="xl"
-                onPress={() => openLoadResultModal(match, false, refreshData)}
-              >
+            ) : !consultedPlayerId || consultedPlayerId === user?.playerId ? (
+              // Si el jugador consulta su propio perfil
+              match.resultLoadedByTeam === playerTeamNumber ? (
+                // si el resultado fue cargado por mi equipo, tengo que esperar aprobación del otro equipo
                 <CustomText type="xsmall" style={styles.resultsButtonText}>
-                  Revisar resultado
+                  Esperando aprobación de resultado
                 </CustomText>
-              </BorderedButton>
+              ) : (
+                // El resultado fue cargado por el otro equipo, tengo que aprobarlo o rechazarlo
+                <BorderedButton
+                  size="xl"
+                  onPress={() => openLoadResultModal(match, false, refreshData)}
+                >
+                  <CustomText type="xsmall" style={styles.resultsButtonText}>
+                    Revisar resultado
+                  </CustomText>
+                </BorderedButton>
+              )
+            ) : (
+              <CustomText type="xsmall" style={styles.resultsButtonText}>
+                Esperando resultado
+              </CustomText>
             ))}
         </View>
       </View>
