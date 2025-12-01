@@ -6,6 +6,7 @@ import { NavigationProp } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { TouchableOpacity, View } from "react-native";
 import { styles } from "./MeFaltaAlguien.styles";
+import { clearMatchDraft } from "@/src/services/matchDraft";
 
 const EmptyState: React.FC = () => {
   const navigation =
@@ -33,7 +34,10 @@ const EmptyState: React.FC = () => {
       <FullButton
         style={styles.emptyPrimaryButton}
         size="l"
-        onPress={() => navigation.navigate("CrearPartido")}
+        onPress={() => {
+          clearMatchDraft();
+          navigation.navigate("CrearPartido");
+        }}
       >
         <CustomText.ButtonText uppercase>Creá tu partido</CustomText.ButtonText>
       </FullButton>
