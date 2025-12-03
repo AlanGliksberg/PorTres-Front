@@ -60,6 +60,8 @@ export default function PlayerProfile({
     try {
       if (activeTab === "historial") {
         await matchHistoryRef.current?.refresh();
+      } else {
+        loadPlayerData();
       }
     } finally {
       setIsRefreshing(false);
