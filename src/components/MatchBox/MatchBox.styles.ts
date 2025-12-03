@@ -97,7 +97,7 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
   },
   column1: {
-    width: "70%",
+    width: "65%",
     gap: 2,
   },
   column2: {
