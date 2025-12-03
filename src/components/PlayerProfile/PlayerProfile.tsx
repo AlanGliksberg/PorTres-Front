@@ -31,24 +31,27 @@ export default function PlayerProfile({
   const matchHistoryRef = useRef<MatchesListRef | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>("personal");
 
-  const loadPlayerData = useCallback(async () => {
-    try {
-      showLoading();
-      setError(null);
-      const playerResponse = await getPlayerDetails(playerId, false);
-      if (playerResponse.error || !playerResponse.data) {
+  const loadPlayerData = useCallback(
+    async (withLoading = true) => {
+      try {
+        withLoading && showLoading();
+        setError(null);
+        const playerResponse = await getPlayerDetails(playerId, false);
+        if (playerResponse.error || !playerResponse.data) {
+          setError("Error al cargar los datos del jugador");
+          return;
+        }
+        const foundPlayer = playerResponse.data.player;
+        setPlayer(foundPlayer);
+      } catch (err) {
         setError("Error al cargar los datos del jugador");
-        return;
+        console.error("Error loading player data:", err);
+      } finally {
+        withLoading && hideLoading();
       }
-      const foundPlayer = playerResponse.data.player;
-      setPlayer(foundPlayer);
-    } catch (err) {
-      setError("Error al cargar los datos del jugador");
-      console.error("Error loading player data:", err);
-    } finally {
-      hideLoading();
-    }
-  }, [hideLoading, playerId, showLoading]);
+    },
+    [hideLoading, playerId, showLoading]
+  );
 
   useEffect(() => {
     loadPlayerData();
@@ -60,8 +63,8 @@ export default function PlayerProfile({
     try {
       if (activeTab === "historial") {
         await matchHistoryRef.current?.refresh();
-      } else {
-        loadPlayerData();
+      } else if (activeTab === "personal") {
+        loadPlayerData(false);
       }
     } finally {
       setIsRefreshing(false);
