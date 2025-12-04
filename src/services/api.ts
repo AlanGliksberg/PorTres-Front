@@ -5,6 +5,7 @@ import { USER_TOKEN_SESSION_KEY } from "../constants/auth";
 import { ApiParams, ApiResponse } from "../types";
 import { getQueryParams } from "../utils/api";
 import { CACHE_TTL, cacheGetCall, getCachedCall } from "./cache";
+import { triggerLogout } from "../utils/logoutManager";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_URL,
@@ -21,12 +22,19 @@ axiosInstance.interceptors.request.use(
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => {
+  async (response) => {
+    if (response.data?.code === 5) {
+      await triggerLogout();
+      return { error: true, code: 5 };
+    }
     if (response.data.error !== false) return { error: true };
     return response.data;
   },
-  (error) => {
+  async (error) => {
     console.log("API error:", error?.response?.data);
+    if (error?.response?.status === 401 || error?.response?.data?.code === 5) {
+      await triggerLogout();
+    }
     if (!error?.response?.data?.error) throw error;
     return error.response.data;
   }

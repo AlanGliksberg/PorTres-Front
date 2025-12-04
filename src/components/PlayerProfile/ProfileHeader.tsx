@@ -40,16 +40,14 @@ export default function ProfileHeader({
     const loadMatchesCount = async () => {
       setLoadingMatchesCount(true);
       if (player?.id) {
-        {
-          const response = await getPlayedMatchesCount(player.id);
-          if (!response.error && response.data) {
-            setMatchesCount(response.data.count);
-          } else {
-            setMatchesCount("S/I");
-          }
-          setLoadingMatchesCount(false);
+        const response = await getPlayedMatchesCount(player.id);
+        if (!response.error && response.data) {
+          setMatchesCount(response.data.count);
+        } else {
+          setMatchesCount("S/I");
         }
       }
+      setLoadingMatchesCount(false);
     };
 
     loadMatchesCount();

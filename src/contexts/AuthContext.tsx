@@ -11,6 +11,7 @@ import { clearCache } from "../services/cache";
 import { savePlayerPushToken } from "../services/player";
 import { JWTPayload } from "../types";
 import { decodeToken } from "../utils/auth";
+import { setLogoutHandler } from "../utils/logoutManager";
 import { requestExpoPushToken } from "../utils/pushNotifications";
 
 type AuthContextData = {
@@ -105,6 +106,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isSubscribed = false;
     };
   }, [token, user?.playerId]);
+
+  useEffect(() => {
+    setLogoutHandler(logout);
+    return () => setLogoutHandler(null);
+  }, [logout]);
 
   return (
     <AuthContext.Provider
