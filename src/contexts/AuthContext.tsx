@@ -8,7 +8,7 @@ import {
   refreshToken as refreshTokenService,
 } from "../services/auth";
 import { clearCache } from "../services/cache";
-import { savePlayerPushToken } from "../services/player";
+import { getPlayerDetails, savePlayerPushToken } from "../services/player";
 import { JWTPayload } from "../types";
 import { decodeToken } from "../utils/auth";
 import { setLogoutHandler } from "../utils/logoutManager";
@@ -106,6 +106,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isSubscribed = false;
     };
   }, [token, user?.playerId]);
+
+  useEffect(() => {
+    if (!token || !user || !user.playerId) return;
+
+    const fetchCurrentPlayer = async () => {
+      try {
+        await getPlayerDetails(user.playerId!);
+      } catch (error) {
+        console.log("Error fetching current player:", error);
+      }
+    };
+
+    fetchCurrentPlayer();
+  }, [token, user, user?.playerId]);
 
   useEffect(() => {
     setLogoutHandler(logout);
