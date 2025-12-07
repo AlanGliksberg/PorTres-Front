@@ -46,6 +46,7 @@ const Questonary: React.FC = () => {
   const { showLoading, hideLoading } = useContext(LoadingContext);
   const [mediaPermission, requestMediaPermission] =
     ImagePicker.useMediaLibraryPermissions();
+  const [helpModalShown, setHelpModalShown] = useState(false);
 
   const {
     control,
@@ -73,6 +74,13 @@ const Questonary: React.FC = () => {
   const categories = allCategories.filter(
     (c) => c.genderId === selectedGenderId
   );
+  const assistanceMessage = `Respondiendo las preguntas serás categorizado entre las categorías ${
+    selectedGender?.code === GENDER_CODE.CABALLERO
+      ? "C7-C9"
+      : selectedGender?.code === GENDER_CODE.DAMA
+      ? "D7-D9"
+      : "C7-C9/D7-D9"
+  }`;
 
   const requestGalleryPermission = async () => {
     if (mediaPermission?.granted) return true;
@@ -301,7 +309,19 @@ const Questonary: React.FC = () => {
                   { label: "No, necesito ayuda", value: false },
                 ]}
                 selected={value}
-                onSelect={onChange}
+                onSelect={(option) => {
+                  if (option === false && !helpModalShown) {
+                    setHelpModalShown(true);
+                    openModal({
+                      title: "¡Atención!",
+                      message: assistanceMessage,
+                      primaryLabel: "Entendido",
+                      hideClose: true,
+                      hideSecondary: true,
+                    });
+                  }
+                  onChange(option);
+                }}
                 disabled={!selectedGenderId || !selectedPosition}
               />
             )}
@@ -317,12 +337,7 @@ const Questonary: React.FC = () => {
 
           {knowsCategory === false && (
             <CustomText type="small" style={{ marginTop: spacing.sm }}>
-              Respondiendo las preguntas serás categorizado entre las categorías
-              {selectedGender?.code === GENDER_CODE.CABALLERO
-                ? " C7-C9"
-                : selectedGender?.code === GENDER_CODE.DAMA
-                ? " D7-D9"
-                : " C7-C9/D7-D9"}
+              {assistanceMessage}
             </CustomText>
           )}
         </View>

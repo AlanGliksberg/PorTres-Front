@@ -10,6 +10,7 @@ import { styles } from "./CustomModal.styles";
 import CustomModalView from "./CustomModalView";
 
 const CustomModal: React.FC<ModalProps> = ({ params, isOpen, closeModal }) => {
+  const hideSecondary = params?.hideSecondary;
   return (
     <CustomModalView
       visible={isOpen}
@@ -40,14 +41,21 @@ const CustomModal: React.FC<ModalProps> = ({ params, isOpen, closeModal }) => {
                 </CustomText>
               )}
 
-              <View style={styles.buttonsContainer}>
-                <SimpleButton
-                  title={params?.secondaryLabel || "Cancelar"}
-                  onPress={() => {
-                    closeModal();
-                    params?.secondaryAction?.();
-                  }}
-                />
+              <View
+                style={[
+                  styles.buttonsContainer,
+                  hideSecondary && styles.singleButtonContainer,
+                ]}
+              >
+                {!hideSecondary && (
+                  <SimpleButton
+                    title={params?.secondaryLabel || "Cancelar"}
+                    onPress={() => {
+                      closeModal();
+                      params?.secondaryAction?.();
+                    }}
+                  />
+                )}
                 <FullButton
                   onPress={() => {
                     closeModal();

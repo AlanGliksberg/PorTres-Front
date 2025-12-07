@@ -52,4 +52,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     gap: spacing.md,
   },
+  singleButtonContainer: {
+    justifyContent: "center",
+  },
 });

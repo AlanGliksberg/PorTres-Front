@@ -10,6 +10,7 @@ export type ModalParams = {
   secondaryLabel?: string;
   secondaryAction?: () => void;
   hideClose?: boolean;
+  hideSecondary?: boolean;
 };
 
 export interface ModalContextData {
