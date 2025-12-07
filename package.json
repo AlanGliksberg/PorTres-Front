@@ -15,6 +15,7 @@
     "android:submit": "eas submit -p android",
     "android:build": "eas build --profile production -p android",
     "android:bs": "eas build --profile production -p android --auto-submit",
+    "apps:bs": "eas build --profile production -p all --auto-submit",
     "update:dev": "eas update --branch dev",
     "update:preview": "eas update --branch preview --environment preview",
     "update:prod": "eas update --branch production --environment production",
