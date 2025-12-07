@@ -7,6 +7,7 @@ import { NavigationProp, RouteProp, useRoute } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { styles } from "./TermsAndConditions.styles";
+import { APP_EMAIL } from "@/src/constants/config";
 
 type TabKey = "terms" | "privacy";
 
@@ -307,16 +308,15 @@ const TermsAndConditions: React.FC = () => {
               suspender o dar de baja la cuenta de cualquier Usuario de forma
               temporal o definitiva, sin necesidad de justificación ni previo
               aviso, si: a) recibe denuncias fundamentadas de otros Usuarios
-              enviadas al correo electrónico de contacto oficial
-              (portresapp@gmail.com); b) se detectan intentos de fraude o
-              manipulación del ranking o del sistema de partidos; c) se incumple
-              cualquier punto de estos T&C, incluyendo faltas de respeto o
-              inasistencias (No-Shows), cuya gravedad será determinada por
-              PorTres a su exclusivo criterio; d) si la denuncia involucra
-              contenido ilegal u ofensivo. PorTres se compromete a realizar las
-              gestiones necesarias para eliminar el contenido y/o suspender la
-              cuenta en un plazo de 72 horas desde la recepción de la denuncia
-              en el mail oficial.
+              enviadas al correo electrónico de contacto oficial ({APP_EMAIL});
+              b) se detectan intentos de fraude o manipulación del ranking o del
+              sistema de partidos; c) se incumple cualquier punto de estos T&C,
+              incluyendo faltas de respeto o inasistencias (No-Shows), cuya
+              gravedad será determinada por PorTres a su exclusivo criterio; d)
+              si la denuncia involucra contenido ilegal u ofensivo. PorTres se
+              compromete a realizar las gestiones necesarias para eliminar el
+              contenido y/o suspender la cuenta en un plazo de 72 horas desde la
+              recepción de la denuncia en el mail oficial.
             </CustomText>
             <CustomText type="body" style={styles.paragraph}>
               7.2. Revisión de Categoría: La Aplicación podrá revisar y
@@ -328,7 +328,7 @@ const TermsAndConditions: React.FC = () => {
             <CustomText type="body" style={styles.paragraph}>
               CONTACTO: Si tiene alguna pregunta o inquietud sobre estos
               Términos y Condiciones, por favor, contáctenos en
-              portresapp@gmail.com.
+              {APP_EMAIL}.
             </CustomText>
           </View>
         ) : (
@@ -362,7 +362,7 @@ const TermsAndConditions: React.FC = () => {
               Argentina.
             </CustomText>
             <CustomText type="body" style={styles.paragraph}>
-              1.3. Contacto: portresapp@gmail.com
+              1.3. Contacto: {APP_EMAIL}
             </CustomText>
             <CustomText type="body" style={styles.paragraph}>
               1.4. Registro de Base de Datos: PorTres se compromete a registrar
@@ -489,7 +489,7 @@ const TermsAndConditions: React.FC = () => {
             </CustomText>
             <CustomText type="body" style={styles.paragraph}>
               Procedimiento para el ejercicio de derechos: Puede remitir un
-              email a portresapp@gmail.com expresando con claridad su petición y
+              email a {APP_EMAIL} expresando con claridad su petición y
               aportando los datos necesarios para su identificación. En un plazo
               de 10 días corridos PorTres responderá indicando las acciones a
               seguir. El derecho de acceso podrá ser ejercido de forma gratuita
@@ -524,7 +524,7 @@ const TermsAndConditions: React.FC = () => {
             </CustomText>
             <CustomText type="body" style={styles.paragraph}>
               CONTACTO: Si tiene alguna pregunta o inquietud sobre esta Política
-              de Privacidad, por favor, contáctenos en portresapp@gmail.com.
+              de Privacidad, por favor, contáctenos en {APP_EMAIL}.
             </CustomText>
           </View>
         )}
