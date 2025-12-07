@@ -158,8 +158,8 @@ const Questonary: React.FC = () => {
               : "Ya configuraste tu perfil. Ahora podés empezar a buscar partidos y conectar con otros jugadores ¡Que disfrutes del juego!",
           primaryLabel: "Ingresar",
           primaryAction: refreshToken,
-          secondaryAction: refreshToken,
           hideClose: true,
+          hideSecondary: true,
         });
       }
     } finally {
