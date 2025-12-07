@@ -57,8 +57,18 @@ export const removeGetPlayedMatchesCache = () => {
   removeCache(GET_PLAYED_MATCHES_URI);
 };
 
-export const removeGetCurrentPlayerCache = () => {
-  removeCache(GET_PLAYER_DETAILS_URI);
+export const removeGetCurrentPlayerCache = (playerId?: number) => {
+  if (typeof playerId === "number") {
+    removeCache(`${GET_PLAYER_DETAILS_URI}/${playerId}`);
+    return;
+  }
+
+  const playerDetailsPrefix = `${GET_PLAYER_DETAILS_URI}/`;
+  cache.forEach((_, key) => {
+    if (key === GET_PLAYER_DETAILS_URI || key.startsWith(playerDetailsPrefix)) {
+      cache.delete(key);
+    }
+  });
 };
 
 export const removePlayedCountCache = () => {

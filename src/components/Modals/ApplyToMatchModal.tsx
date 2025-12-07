@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import BaseModal from "./BaseModal";
 import CustomTextInput from "../ui/CustomTextInput/CustomTextInput";
@@ -14,6 +14,7 @@ import { colors } from "@/src/theme";
 import FullButton from "../ui/FullButton/FullButton";
 import { ModalContext } from "@/src/contexts/ModalContext";
 import { applyToMatch } from "@/src/services/application";
+import { getPlayerDetails } from "@/src/services/player";
 
 interface ApplyToMatchModalProps {
   isVisible: boolean;
@@ -32,9 +33,29 @@ const ApplyToMatchModal: React.FC<ApplyToMatchModalProps> = ({
 }) => {
   const { user } = useContext(AuthContext);
   const [message, setMessage] = useState("");
-  const [phone, setPhone] = useState(user?.phoneNumber || "");
+  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const { openErrorModal, openModal } = useContext(ModalContext);
+
+  useEffect(() => {
+    const fetchPhone = async () => {
+      if (!isVisible || !user?.playerId) return;
+      try {
+        const res = await getPlayerDetails(user.playerId);
+        if (!res.error && res.data?.player) {
+          const phoneNumber =
+            res.data.player.phone ??
+            res.data.player.user?.phoneNumber ??
+            "";
+          setPhone(phoneNumber);
+        }
+      } catch (error) {
+        console.log("Error fetching player phone:", error);
+      }
+    };
+
+    fetchPhone();
+  }, [isVisible, user?.playerId]);
 
   const handleSubmit = async () => {
     try {

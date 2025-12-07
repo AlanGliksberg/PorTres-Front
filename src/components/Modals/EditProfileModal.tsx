@@ -62,6 +62,7 @@ export default function EditProfileModal({
       lastName,
       phone,
       positionId,
+      playerId: player?.id,
     });
 
     if (res.error) {

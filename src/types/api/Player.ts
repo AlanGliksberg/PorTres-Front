@@ -28,6 +28,7 @@ export type UpdatePlayerPayload = {
   lastName: string;
   phone?: string;
   positionId: number;
+  playerId?: number;
 };
 
 export type PlayerPushTokenPayload = {

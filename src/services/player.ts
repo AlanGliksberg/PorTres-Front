@@ -27,7 +27,7 @@ import {
 } from "../types/api/Player";
 import { Question } from "../types/player/Question";
 import { deleteApi, get, post, put } from "./api";
-import { EXTENDED_CACHE_TTL } from "./cache";
+import { EXTENDED_CACHE_TTL, removeGetCurrentPlayerCache } from "./cache";
 
 export const getAllPlayers = async () => {
   return await get<{ players: Player[] }>(GET_PLAYERS_URI, {
@@ -111,9 +111,17 @@ export const createPlayer = async (data: CreatePlayerPayload) => {
 };
 
 export const updatePlayer = async (data: UpdatePlayerPayload) => {
-  return await put<{ player: Player }>(UPDATE_PLAYER_URI, {
-    body: data,
+  const { playerId, ...payload } = data;
+
+  const res = await put<{ player: Player }>(UPDATE_PLAYER_URI, {
+    body: payload,
   });
+
+  if (!res.error) {
+    removeGetCurrentPlayerCache(playerId);
+  }
+
+  return res;
 };
 
 export const updatePlayerPicture = async (photo: ProfilePhotoPayload) => {

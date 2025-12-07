@@ -36,7 +36,7 @@ export default function PlayerProfile({
       try {
         withLoading && showLoading();
         setError(null);
-        const playerResponse = await getPlayerDetails(playerId, false);
+        const playerResponse = await getPlayerDetails(playerId);
         if (playerResponse.error || !playerResponse.data) {
           setError("Error al cargar los datos del jugador");
           return;
@@ -69,7 +69,7 @@ export default function PlayerProfile({
     } finally {
       setIsRefreshing(false);
     }
-  }, [activeTab]);
+  }, [activeTab, loadPlayerData]);
 
   // TODO - mejorar manejo de error y agregar loading
   // considerar poder cerrar sesion si hay un error
