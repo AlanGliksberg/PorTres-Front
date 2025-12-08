@@ -9,7 +9,15 @@ export const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   trigger: {
-    padding: spacing.xs,
+    height: 26,
+    width: 26,
+    // padding: spacing.xs,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.input,
+    borderRadius: spacing.sm,
+    alignItems: "center",
+    justifyContent: "center",
   },
   overlay: {
     position: "absolute",

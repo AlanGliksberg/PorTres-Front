@@ -112,6 +112,7 @@ export const styles = StyleSheet.create({
   statusContainer: {
     flexDirection: "row",
     alignItems: "center",
+    gap: spacing.xs
   },
   moreOptionsButton: {
     padding: spacing.xs,
