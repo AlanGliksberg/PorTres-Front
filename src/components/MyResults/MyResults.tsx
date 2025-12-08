@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 import { styles } from "./MyResults.style";
 import {
@@ -15,8 +15,6 @@ import { getMyPendingResults } from "@/src/services/match";
 import { NavigationProp } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import SimpleButton from "../ui/SimpleButton/SimpleButton";
-import FullButton from "../ui/FullButton/FullButton";
-import { PlayerModalsContext } from "@/src/contexts/PlayerModalsContext";
 import { removeMyResultsCache } from "@/src/services/cache";
 
 const MyResults: React.FC = () => {
@@ -27,8 +25,6 @@ const MyResults: React.FC = () => {
     useNavigation<
       NavigationProp<AppStackParamList & MeFaltaAlguienStackParamList>
     >();
-  const { openLoadResultModal } = useContext(PlayerModalsContext);
-
   let loadMatches = async (
     nextPage: number,
     pageSize: number
@@ -97,20 +93,6 @@ const MyResults: React.FC = () => {
             refreshData={async () => removeMyResultsCache()}
           />
         </ScrollView>
-      </View>
-
-      <View style={styles.asyncContainer}>
-        <View style={styles.separator} />
-        <CustomText bold>Cargá un resultado de otro partido:</CustomText>
-        <FullButton
-          onPress={() => openLoadResultModal(null, false)}
-          size="l"
-          style={styles.createResultButton}
-        >
-          <CustomText.ButtonText uppercase type="small">
-            Cargar resultado
-          </CustomText.ButtonText>
-        </FullButton>
       </View>
     </View>
   );

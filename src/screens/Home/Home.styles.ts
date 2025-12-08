@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { spacing } from "@/src/theme";
+import { colors, spacing } from "@/src/theme";
 
 export const styles = StyleSheet.create({
   container: {
@@ -10,6 +10,19 @@ export const styles = StyleSheet.create({
   },
   bottomSection: {
     marginTop: "auto",
-    paddingBottom: spacing.sm,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    gap: spacing.md,
+  },
+  loadResultSection: {
+    gap: spacing.sm,
+  },
+  separator: {
+    width: "100%",
+    height: 2,
+    backgroundColor: colors.selectedText,
+  },
+  createResultButton: {
+    alignSelf: "center",
   },
 });
