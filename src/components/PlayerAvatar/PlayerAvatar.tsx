@@ -94,7 +94,7 @@ const PlayerAvatar: React.FC<PlayerAvatarProps> = ({
           canRemove ? () => removeCallback(player) : undefined
         )
     : isCreator
-    ? match?.status.code === MATCH_STATUS.PENDING
+    ? !match || match?.status.code === MATCH_STATUS.PENDING
       ? () => openAddPlayerToMatch(match!, team!, addPlayerCallback)
       : undefined
     : !isMatchPlayer
