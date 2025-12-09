@@ -7,7 +7,9 @@ export const styles = StyleSheet.create({
   },
   subtitle: {
     marginBottom: spacing.lg,
-    flexDirection: "row",
+  },
+  subtitleText: {
+    flexShrink: 1,
   },
   inputContainer: {
     marginBottom: spacing.lg,

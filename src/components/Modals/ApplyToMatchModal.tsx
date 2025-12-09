@@ -101,10 +101,11 @@ const ApplyToMatchModal: React.FC<ApplyToMatchModalProps> = ({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
           <View style={styles.subtitle}>
-            <CustomText type="h4">Postulate al partido</CustomText>
-            <CustomText type="h4" bold>
-              {" "}
-              {match?.location}
+            <CustomText type="h4" style={styles.subtitleText}>
+              Postulate al partido en{" "}
+              <CustomText type="h4" bold>
+                {match?.location}
+              </CustomText>
             </CustomText>
           </View>
 
