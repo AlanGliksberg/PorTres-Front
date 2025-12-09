@@ -61,10 +61,11 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   tag: {
-    backgroundColor: colors.tag,
     color: colors.tagText,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
+    height: 26,
+    lineHeight: 16,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: colors.tagText,
@@ -111,8 +112,8 @@ export const styles = StyleSheet.create({
   },
   statusContainer: {
     flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.xs
+    alignItems: "flex-start",
+    gap: spacing.xs,
   },
   moreOptionsButton: {
     padding: spacing.xs,
@@ -123,5 +124,20 @@ export const styles = StyleSheet.create({
   },
   resultsButtonText: {
     color: colors.primary,
+  },
+  actionsContainer: {
+    flexDirection: "column",
+    alignItems: "flex-end",
+    gap: spacing.xs,
+  },
+  shareButton: {
+    width: 26,
+    height: 26,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: spacing.sm,
+    backgroundColor: colors.input,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

@@ -22,7 +22,7 @@ import {
 } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useContext } from "react";
-import { Share, View } from "react-native";
+import { Share, TouchableOpacity, View } from "react-native";
 import TeamAvatars from "../TeamAvatars/TeamAvatars";
 import BorderedButton from "../ui/BorderedButton/BorderedButton";
 import CustomText from "../ui/CustomText/CustomText";
@@ -145,15 +145,19 @@ const MatchBox: React.FC<MatchBoxProps> = ({
   };
 
   const handleShareMatch = async () => {
-    const isCompleted = match.status.code === MATCH_STATUS.COMPLETED;
-    const message = isCompleted
-      ? buildCompletedMatchShareMessage(match)
-      : buildMatchShareMessage(match);
+    const message = getShareMessage();
     try {
       await Share.share({ message });
     } catch (error) {
       console.error("Error sharing match", error);
     }
+  };
+
+  const getShareMessage = () => {
+    const isCompleted = match.status.code === MATCH_STATUS.COMPLETED;
+    return isCompleted
+      ? buildCompletedMatchShareMessage(match)
+      : buildMatchShareMessage(match);
   };
 
   const handleApply =
@@ -181,16 +185,6 @@ const MatchBox: React.FC<MatchBoxProps> = ({
     }
 
     if (isCreator) {
-      if (
-        match.status.code === MATCH_STATUS.PENDING ||
-        match.status.code === MATCH_STATUS.COMPLETED
-      ) {
-        dropdownOptions.push({
-          label: "Compartir",
-          onPress: handleShareMatch,
-          icon: "share",
-        });
-      }
       dropdownOptions.push({
         label: "Editar",
         onPress: handleEdit,
@@ -298,9 +292,26 @@ const MatchBox: React.FC<MatchBoxProps> = ({
               type="match"
             />
           )}
-          {showDetails &&
-            match.status.code !== MATCH_STATUS.CANCELLED &&
-            !readOnly && <DropdownMenu options={dropdownOptions} />}
+          {showDetails && (
+            <View style={styles.actionsContainer}>
+              {match.status.code !== MATCH_STATUS.CANCELLED && !readOnly && (
+                <DropdownMenu options={dropdownOptions} />
+              )}
+              {(match.status.code === MATCH_STATUS.PENDING ||
+                match.status.code === MATCH_STATUS.COMPLETED) && (
+                <TouchableOpacity
+                  style={styles.shareButton}
+                  onPress={handleShareMatch}
+                >
+                  <MaterialCommunityIcons
+                    name="share-variant"
+                    size={18}
+                    color={colors.description}
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
         </View>
         <View style={styles.row}>
           {isCreator &&
