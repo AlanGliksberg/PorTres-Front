@@ -43,7 +43,7 @@ const CONFIRMED_PLAYER_EMOJI = "✅";
 const MISSING_PLAYER_EMOJI = "🆓";
 const TEAM_HEADER_EMOJI = "🤝";
 const APP_DOWNLOAD_LINK = "https://tinyurl.com/portres-download";
-const APP_DOWNLOAD_LINE = `📲 Descargá la app: ${APP_DOWNLOAD_LINK}`;
+const APP_DOWNLOAD_LINE = `📲 *Descargá la app:* ${APP_DOWNLOAD_LINK}`;
 
 const buildTeamsSection = (match: Match): string[] => {
   const lines: string[] = [];
@@ -92,7 +92,7 @@ export const buildMatchShareMessage = (match: Match) => {
       missingPlayers > 1 ? "Faltan" : "Falta"
     } ${missingPlayers} ${playerText}`,
     "",
-    `📅 ${parseDateToString(match.date)} - ${match.time} hs`,
+    `📅 *${parseDateToString(match.date)} - ${match.time} hs*`,
   ];
 
   if (match.duration) {
@@ -100,13 +100,13 @@ export const buildMatchShareMessage = (match: Match) => {
   }
 
   details.push(
-    `📍 ${match.location}${match.description ? ` - ${match.description}` : ""}`
+    `📍 *${match.location}*${match.description ? ` - ${match.description}` : ""}`
   );
 
   details.push("");
 
   if (match.category?.description) {
-    details.push(`📊 Categoría: ${match.category.description}`);
+    details.push(`📊 *Categoría: ${match.category.description}*`);
   }
 
   const confirmedPlayerEmoji = "✅";
@@ -135,7 +135,7 @@ export const buildCompletedMatchShareMessage = (match: Match) => {
   const details: string[] = [
     `🎾 ¡Partido confirmado!`,
     "",
-    `📅 ${parseDateToString(match.date)} - ${match.time} hs`,
+    `📅 *${parseDateToString(match.date)} - ${match.time} hs*`,
   ];
 
   if (match.duration) {
@@ -143,13 +143,13 @@ export const buildCompletedMatchShareMessage = (match: Match) => {
   }
 
   details.push(
-    `📍 ${match.location}${match.description ? ` - ${match.description}` : ""}`
+    `📍 *${match.location}*${match.description ? ` - ${match.description}` : ""}`
   );
 
   details.push("");
 
   if (match.category?.description) {
-    details.push(`📊 Categoría: ${match.category.description}`);
+    details.push(`📊 *Categoría: ${match.category.description}*`);
   }
 
   const teamsSection = buildTeamsSection(match);
