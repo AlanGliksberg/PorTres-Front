@@ -42,6 +42,8 @@ const MAX_PLAYERS_PER_TEAM = 2;
 const CONFIRMED_PLAYER_EMOJI = "✅";
 const MISSING_PLAYER_EMOJI = "🆓";
 const TEAM_HEADER_EMOJI = "🤝";
+const APP_DOWNLOAD_LINK = "https://tinyurl.com/portres-download";
+const APP_DOWNLOAD_LINE = `📲 Descargá la app: ${APP_DOWNLOAD_LINK}`;
 
 const buildTeamsSection = (match: Match): string[] => {
   const lines: string[] = [];
@@ -126,7 +128,7 @@ export const buildMatchShareMessage = (match: Match) => {
     details.push(...listedPlayers);
   }
 
-  return `${details.join("\n")}\n\n¿Te sumás? Escribime por privado.`;
+  return `${details.join("\n")}\n\n¿Te sumás? Escribime por privado.\n\n${APP_DOWNLOAD_LINE}`;
 };
 
 export const buildCompletedMatchShareMessage = (match: Match) => {
@@ -156,5 +158,5 @@ export const buildCompletedMatchShareMessage = (match: Match) => {
     details.push(...teamsSection);
   }
 
-  return `${details.join("\n")}\n\n¡Buena suerte!`;
+  return `${details.join("\n")}\n\n¡Buena suerte!\n\n${APP_DOWNLOAD_LINE}`;
 };
