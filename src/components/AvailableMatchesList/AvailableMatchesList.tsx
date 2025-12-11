@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 import { styles } from "./AvailableMatchesList.styles";
 import MatchesFilters from "./MatchesFilters";
@@ -8,12 +8,23 @@ import type { MatchesListRef } from "../MatchesList/MatchesList";
 import CustomText from "../ui/CustomText/CustomText";
 import { getMatchesWithFilters } from "@/src/services/match";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { colors } from "@/src/theme";
+import { colors, spacing } from "@/src/theme";
+import SimpleButton from "../ui/SimpleButton/SimpleButton";
 
-const AvailableMatchesList: React.FC = () => {
+interface AvailableMatchesListProps {
+  deepLinkMatchId?: number | null;
+}
+
+const AvailableMatchesList: React.FC<AvailableMatchesListProps> = ({
+  deepLinkMatchId = null,
+}) => {
   const [error, setError] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [filters, setFilters] = useState<MatchFilters>({
+  const [matchIdFilter, setMatchIdFilter] = useState<number | null>(
+    deepLinkMatchId
+  );
+
+  const buildFilters = (matchId: number | null): MatchFilters => ({
     description: null,
     dateFrom: null,
     dateTo: null,
@@ -22,7 +33,12 @@ const AvailableMatchesList: React.FC = () => {
     gender: null,
     category: null,
     duration: null,
+    matchId,
   });
+
+  const [filters, setFilters] = useState<MatchFilters>(
+    buildFilters(matchIdFilter)
+  );
   const matchesListRef = useRef<MatchesListRef | null>(null);
 
   let loadMatches = async (
@@ -38,7 +54,11 @@ const AvailableMatchesList: React.FC = () => {
         false
       );
       if (res.error || !res.data) throw new Error("Error al cargar partidos");
-      const { matches: newMatches, totalMatches } = res.data;
+      let { matches: newMatches, totalMatches } = res.data;
+      if (matchIdFilter) {
+        newMatches = newMatches.filter((m) => m.id === matchIdFilter);
+        totalMatches = newMatches.length;
+      }
       return [newMatches, totalMatches];
     } catch (e: any) {
       console.log(e);
@@ -62,10 +82,28 @@ const AvailableMatchesList: React.FC = () => {
   );
 
   const handleFiltersChange = (filters: MatchFilters) => {
-    setFilters(filters);
+    setFilters({ ...filters, matchId: matchIdFilter });
   };
 
   const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await matchesListRef.current?.refresh();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    setMatchIdFilter(deepLinkMatchId);
+    setFilters(buildFilters(deepLinkMatchId));
+    matchesListRef.current?.refresh();
+  }, [deepLinkMatchId]);
+
+  const handleShowAll = async () => {
+    setMatchIdFilter(null);
+    const resetFilters = buildFilters(null);
+    setFilters(resetFilters);
     setIsRefreshing(true);
     try {
       await matchesListRef.current?.refresh();
@@ -95,6 +133,13 @@ const AvailableMatchesList: React.FC = () => {
           viewMore
           allowApplications
         />
+        {matchIdFilter && (
+          <SimpleButton
+            title="Ver todos los partidos"
+            onPress={handleShowAll}
+            style={{ marginTop: spacing.sm }}
+          />
+        )}
       </ScrollView>
     </View>
   );

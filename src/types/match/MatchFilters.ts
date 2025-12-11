@@ -7,4 +7,5 @@ export type MatchFilters = {
   gender: number | null;
   category: number | null;
   duration: number | null;
+  matchId: number | null;
 };

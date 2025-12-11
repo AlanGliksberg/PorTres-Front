@@ -12,6 +12,7 @@ import { MeFaltaAlguienStackParamList } from "@/src/types/navigation/MeFaltaAlgu
 import { parseDateToString } from "@/src/utils/common";
 import {
   buildCompletedMatchShareMessage,
+  buildMatchDeepLink,
   buildMatchShareMessage,
 } from "@/src/utils/match";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
@@ -145,19 +146,24 @@ const MatchBox: React.FC<MatchBoxProps> = ({
   };
 
   const handleShareMatch = async () => {
-    const message = getShareMessage();
+    const { message, url } = getSharePayload();
     try {
-      await Share.share({ message });
+      await Share.share({ message, url });
     } catch (error) {
       console.error("Error sharing match", error);
     }
   };
 
-  const getShareMessage = () => {
+  const getSharePayload = () => {
     const isCompleted = match.status.code === MATCH_STATUS.COMPLETED;
-    return isCompleted
-      ? buildCompletedMatchShareMessage(match)
-      : buildMatchShareMessage(match);
+    if (isCompleted) {
+      return { message: buildCompletedMatchShareMessage(match), url: undefined };
+    }
+    const deepLink = buildMatchDeepLink(match.id);
+    return {
+      message: buildMatchShareMessage(match),
+      url: deepLink,
+    };
   };
 
   const handleApply =

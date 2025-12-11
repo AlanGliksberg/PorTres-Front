@@ -53,6 +53,7 @@ const MatchesFilters: React.FC<MatchesFiltersProps> = ({ onFiltersChange }) => {
     gender,
     category,
     duration,
+    matchId: null,
   });
 
   const handleSearch = (searchTerm: string) => {

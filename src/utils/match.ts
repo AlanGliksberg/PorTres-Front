@@ -1,6 +1,8 @@
 import { MatchResult, Match, Player } from "../types";
+import { API_BASE_URL } from "../config/env";
 import { GENDER_CODE } from "../types/player/Gender";
 import { parseDateToString } from "./common";
+import { Buffer } from "buffer";
 
 export const parseSets = (match: Match | null): MatchResult | null => {
   if (!match || match.sets.length === 0) return null;
@@ -42,8 +44,67 @@ const MAX_PLAYERS_PER_TEAM = 2;
 const CONFIRMED_PLAYER_EMOJI = "✅";
 const MISSING_PLAYER_EMOJI = "🆓";
 const TEAM_HEADER_EMOJI = "🤝";
-const APP_DOWNLOAD_LINK = "https://tinyurl.com/portres-download";
+const APP_DOWNLOAD_LINK = `${API_BASE_URL}/download`;
 const APP_DOWNLOAD_LINE = `📲 *Descargá la app:* ${APP_DOWNLOAD_LINK}`;
+
+const toBase64Url = (input: Buffer) =>
+  input
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+
+const fromBase64Url = (input: string) => {
+  const normalized = input.replace(/-/g, "+").replace(/_/g, "/");
+  // Pad to multiple of 4
+  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+  return Buffer.from(padded, "base64");
+};
+
+const encodeMatchId = (matchId: number) => {
+  const buf = Buffer.allocUnsafe(4);
+  buf.writeUInt32BE(matchId >>> 0, 0);
+  return toBase64Url(buf); // 6 chars for uint32
+};
+
+const decodeMatchId = (encoded: string): number | null => {
+  try {
+    const buf = fromBase64Url(encoded);
+    if (buf.length !== 4) return null;
+    const decoded = buf.readUInt32BE(0);
+    return Number.isFinite(decoded) ? decoded : null;
+  } catch {
+    return null;
+  }
+};
+
+export const buildMatchDeepLink = (matchId: number) =>
+  `${API_BASE_URL}/link/match/${encodeMatchId(matchId)}`;
+
+export const parseMatchIdFromDeepLink = (
+  url?: string | null
+): number | null => {
+  if (!url) return null;
+  const normalizedUrl = url.trim();
+  const pathMatch = normalizedUrl.match(
+    /match(?:es)?(?:\/link)?\/([0-9a-z\-_]+)/i
+  );
+  if (pathMatch?.[1]) {
+    const decoded = decodeMatchId(pathMatch[1]);
+    if (decoded !== null) return decoded;
+  }
+  const searchParamMatch = normalizedUrl.match(/matchId=([0-9a-z\-_]+)/i);
+  if (searchParamMatch?.[1]) {
+    const decoded = decodeMatchId(searchParamMatch[1]);
+    if (decoded !== null) return decoded;
+  }
+  const legacyId = normalizedUrl.match(/match(?:es)?(?:\/link)?\/(\d+)/i);
+  if (legacyId?.[1]) {
+    const matchId = Number(legacyId[1]);
+    return Number.isFinite(matchId) ? matchId : null;
+  }
+  return null;
+};
 
 const buildTeamsSection = (match: Match): string[] => {
   const lines: string[] = [];
@@ -100,7 +161,9 @@ export const buildMatchShareMessage = (match: Match) => {
   }
 
   details.push(
-    `📍 *${match.location}*${match.description ? ` - ${match.description}` : ""}`
+    `📍 *${match.location}*${
+      match.description ? ` - ${match.description}` : ""
+    }`
   );
 
   details.push("");
@@ -128,7 +191,11 @@ export const buildMatchShareMessage = (match: Match) => {
     details.push(...listedPlayers);
   }
 
-  return `${details.join("\n")}\n\n¿Te sumás? Escribime por privado.\n\n${APP_DOWNLOAD_LINE}`;
+  const deepLink = buildMatchDeepLink(match.id);
+
+  return `${details.join(
+    "\n"
+  )}\n\n¿Te sumás? Escribime por privado o postulate acá: ${deepLink}\n\n${APP_DOWNLOAD_LINE}`;
 };
 
 export const buildCompletedMatchShareMessage = (match: Match) => {
@@ -143,7 +210,9 @@ export const buildCompletedMatchShareMessage = (match: Match) => {
   }
 
   details.push(
-    `📍 *${match.location}*${match.description ? ` - ${match.description}` : ""}`
+    `📍 *${match.location}*${
+      match.description ? ` - ${match.description}` : ""
+    }`
   );
 
   details.push("");
