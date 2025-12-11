@@ -2,7 +2,6 @@ import { MatchResult, Match, Player } from "../types";
 import { API_BASE_URL } from "../config/env";
 import { GENDER_CODE } from "../types/player/Gender";
 import { parseDateToString } from "./common";
-import { Buffer } from "buffer";
 
 export const parseSets = (match: Match | null): MatchResult | null => {
   if (!match || match.sets.length === 0) return null;
@@ -46,36 +45,15 @@ const MISSING_PLAYER_EMOJI = "🆓";
 const TEAM_HEADER_EMOJI = "🤝";
 const APP_DOWNLOAD_LINK = `${API_BASE_URL}/download`;
 const APP_DOWNLOAD_LINE = `📲 *Descargá la app:* ${APP_DOWNLOAD_LINK}`;
+const OBFUSCATION_KEY = 739391; // simple XOR para no mostrar ids secuenciales
 
-const toBase64Url = (input: Buffer) =>
-  input
-    .toString("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
-
-const fromBase64Url = (input: string) => {
-  const normalized = input.replace(/-/g, "+").replace(/_/g, "/");
-  // Pad to multiple of 4
-  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
-  return Buffer.from(padded, "base64");
-};
-
-const encodeMatchId = (matchId: number) => {
-  const buf = Buffer.allocUnsafe(4);
-  buf.writeUInt32BE(matchId >>> 0, 0);
-  return toBase64Url(buf); // 6 chars for uint32
-};
+const encodeMatchId = (matchId: number) =>
+  ((matchId ^ OBFUSCATION_KEY) >>> 0).toString(36).padStart(6, "0");
 
 const decodeMatchId = (encoded: string): number | null => {
-  try {
-    const buf = fromBase64Url(encoded);
-    if (buf.length !== 4) return null;
-    const decoded = buf.readUInt32BE(0);
-    return Number.isFinite(decoded) ? decoded : null;
-  } catch {
-    return null;
-  }
+  const obfuscated = parseInt(encoded, 36);
+  if (!Number.isFinite(obfuscated)) return null;
+  return (obfuscated ^ OBFUSCATION_KEY) >>> 0;
 };
 
 export const buildMatchDeepLink = (matchId: number) =>
@@ -87,13 +65,13 @@ export const parseMatchIdFromDeepLink = (
   if (!url) return null;
   const normalizedUrl = url.trim();
   const pathMatch = normalizedUrl.match(
-    /match(?:es)?(?:\/link)?\/([0-9a-z\-_]+)/i
+    /match(?:es)?(?:\/link)?\/([0-9a-z]+)/i
   );
   if (pathMatch?.[1]) {
     const decoded = decodeMatchId(pathMatch[1]);
     if (decoded !== null) return decoded;
   }
-  const searchParamMatch = normalizedUrl.match(/matchId=([0-9a-z\-_]+)/i);
+  const searchParamMatch = normalizedUrl.match(/matchId=([0-9a-z]+)/i);
   if (searchParamMatch?.[1]) {
     const decoded = decodeMatchId(searchParamMatch[1]);
     if (decoded !== null) return decoded;
