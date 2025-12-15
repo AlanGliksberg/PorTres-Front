@@ -6,6 +6,7 @@ import React, { useContext } from "react";
 import { Image, TouchableOpacity, View } from "react-native";
 import CustomText from "../ui/CustomText/CustomText";
 import { styles } from "./PlayerAvatar.styles";
+import useUser from "@/src/hooks/useUser";
 
 type AvatarSize = "s" | "m" | "l" | "xl";
 
@@ -38,6 +39,7 @@ const PlayerAvatar: React.FC<PlayerAvatarProps> = ({
 }) => {
   const { openPlayerDetail, openAddPlayerToMatch } =
     useContext(PlayerModalsContext);
+  const { user } = useUser();
 
   const canRemove =
     isCreator &&
@@ -47,8 +49,8 @@ const PlayerAvatar: React.FC<PlayerAvatarProps> = ({
       match.status.code === MATCH_STATUS.PENDING ||
       match.status.code === MATCH_STATUS.COMPLETED);
 
-  const isMatchPlayer = match
-    ? match.players.some((p) => p.id === player?.id)
+  const iAmMatchPlayer = match
+    ? match.players.some((p) => p.id === user?.playerId)
     : false;
 
   const textSize =
@@ -97,7 +99,7 @@ const PlayerAvatar: React.FC<PlayerAvatarProps> = ({
     ? !match || match?.status.code === MATCH_STATUS.PENDING
       ? () => openAddPlayerToMatch(match!, team!, addPlayerCallback)
       : undefined
-    : !isMatchPlayer
+    : !iAmMatchPlayer
     ? handleApply
       ? () => handleApply(team)
       : undefined
