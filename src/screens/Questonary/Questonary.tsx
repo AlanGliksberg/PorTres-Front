@@ -23,8 +23,8 @@ import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import CustomQuestions from "./CustomQuestions";
 import { styles } from "./Questonary.styles";
 import { GENDER_CODE } from "@/src/types/player/Gender";
+import usePhotoPicker from "@/src/hooks/usePhotoPicker";
 import * as ImagePicker from "expo-image-picker";
-import { CameraType } from "expo-image-picker";
 
 type QuestionValues = {
   genderId: number | null;
@@ -44,9 +44,8 @@ const Questonary: React.FC = () => {
   const { openErrorModal, openModal } = useContext(ModalContext);
   const { refreshToken } = useContext(AuthContext);
   const { showLoading, hideLoading } = useContext(LoadingContext);
-  const [mediaPermission, requestMediaPermission] =
-    ImagePicker.useMediaLibraryPermissions();
   const [helpModalShown, setHelpModalShown] = useState(false);
+  const { openPhotoPicker } = usePhotoPicker();
 
   const {
     control,
@@ -82,36 +81,8 @@ const Questonary: React.FC = () => {
       : "C7-C9/D7-D9"
   }`;
 
-  const requestGalleryPermission = async () => {
-    if (mediaPermission?.granted) return true;
-    const permissionResult = await requestMediaPermission();
-    if (!permissionResult.granted) {
-      openErrorModal(
-        "Permisos",
-        "Necesitamos permisos para acceder a tus fotos y poder cargar tu imagen de perfil."
-      );
-      return false;
-    }
-    return true;
-  };
-
-  const handleSelectProfilePhoto = async () => {
-    const hasPermission = await requestGalleryPermission();
-    if (!hasPermission) return;
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: "images",
-      allowsEditing: true,
-      aspect: [1, 1],
-      cameraType: CameraType.front,
-      shape: "oval",
-      quality: 0.7,
-    });
-
-    if (result.canceled || !result.assets?.length) return;
-
-    const asset = result.assets[0];
-    setProfilePhoto(asset);
+  const handleSelectProfilePhoto = () => {
+    openPhotoPicker((asset) => setProfilePhoto(asset));
   };
 
   const handleRemoveProfilePhoto = () => {
@@ -236,7 +207,7 @@ const Questonary: React.FC = () => {
             >
               <Ionicons name="camera" size={24} color={colors.placeholder} />
               <CustomText type="small" style={styles.photoPlaceholderText}>
-                Subí una foto o hacé click para tomarla desde la galería
+                Subí una foto desde la galería o tomala en el momento
               </CustomText>
             </TouchableOpacity>
           )}

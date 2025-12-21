@@ -12,6 +12,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { ModalContext } from "@/src/contexts/ModalContext";
 import { LoadingContext } from "@/src/contexts/LoadingContext";
+import usePhotoPicker from "@/src/hooks/usePhotoPicker";
 import {
   deletePlayerPicture,
   updatePlayerPicture,
@@ -33,8 +34,7 @@ export default function ProfileHeader({
   const { showLoading, hideLoading } = useContext(LoadingContext);
   const [matchesCount, setMatchesCount] = useState<number | string>(0);
   const [loadingMatchesCount, setLoadingMatchesCount] = useState(false);
-  const [galleryPermission, requestGalleryPermission] =
-    ImagePicker.useMediaLibraryPermissions();
+  const { openPhotoPicker } = usePhotoPicker();
 
   useEffect(() => {
     const loadMatchesCount = async () => {
@@ -53,34 +53,7 @@ export default function ProfileHeader({
     loadMatchesCount();
   }, [player]);
 
-  const requestGalleryAccess = async () => {
-    if (galleryPermission?.granted) return true;
-    const permission = await requestGalleryPermission();
-    if (!permission.granted) {
-      openErrorModal(
-        "Permisos",
-        "Necesitamos acceder a tu galería para que puedas actualizar tu foto de perfil."
-      );
-      return false;
-    }
-    return true;
-  };
-
-  const handleEditPhoto = async () => {
-    const hasPermission = await requestGalleryAccess();
-    if (!hasPermission) return;
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: "images",
-      allowsEditing: true,
-      aspect: [1, 1],
-      cameraType: ImagePicker.CameraType.front,
-      shape: "oval",
-      quality: 0.7,
-    });
-
-    if (result.canceled || !result.assets?.length) return;
-    const asset = result.assets[0];
+  const uploadPhoto = async (asset: ImagePicker.ImagePickerAsset) => {
     const photoPayload = {
       uri: asset.uri,
       type: asset.mimeType || "image/jpeg",
@@ -107,6 +80,9 @@ export default function ProfileHeader({
         title: "Foto actualizada",
         message: "Tu foto de perfil se actualizó correctamente.",
         primaryLabel: "Aceptar",
+        primaryAction: onPhotoUpdated,
+        hideClose: true,
+        hideSecondary: true,
       });
     } catch (error) {
       console.error("Error updating profile picture:", error);
@@ -117,6 +93,10 @@ export default function ProfileHeader({
     } finally {
       hideLoading();
     }
+  };
+
+  const handleEditPhoto = () => {
+    openPhotoPicker(uploadPhoto);
   };
 
   const removePhoto = async () => {
