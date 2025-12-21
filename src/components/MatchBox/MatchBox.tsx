@@ -157,7 +157,10 @@ const MatchBox: React.FC<MatchBoxProps> = ({
   const getSharePayload = () => {
     const isCompleted = match.status.code === MATCH_STATUS.COMPLETED;
     if (isCompleted) {
-      return { message: buildCompletedMatchShareMessage(match), url: undefined };
+      return {
+        message: buildCompletedMatchShareMessage(match),
+        url: undefined,
+      };
     }
     const deepLink = buildMatchDeepLink(match.id);
     return {
@@ -404,7 +407,7 @@ const MatchBox: React.FC<MatchBoxProps> = ({
               )
             ) : (
               <CustomText type="xsmall" style={styles.resultsButtonText}>
-                Esperando resultado
+                Resultado pendiente
               </CustomText>
             ))}
         </View>
