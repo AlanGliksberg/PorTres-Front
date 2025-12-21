@@ -99,11 +99,13 @@ export const styles = StyleSheet.create({
   },
   column1: {
     width: "65%",
+    paddingRight: spacing.sm,
     gap: 2,
   },
   column2: {
     alignItems: "flex-end",
     width: "30%",
+    paddingLeft: spacing.sm,
     justifyContent: "space-between",
   },
   dateContainer: {
