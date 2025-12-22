@@ -20,6 +20,7 @@
       "bundleIdentifier": "com.Thunder.porTres",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "Necesitamos usar tu cámara para que puedas tomar una foto de perfil.",
         "NSPhotoLibraryUsageDescription": "Necesitamos acceder a tu galería para que puedas actualizar tu foto de perfil.",
         "NSPhotoLibraryAddUsageDescription": "Necesitamos guardar la foto de tu perfil para que puedas subirlas desde tu galería."
       }
