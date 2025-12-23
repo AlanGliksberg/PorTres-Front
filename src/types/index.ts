@@ -35,3 +35,4 @@ export { Position } from "./player/Position";
 export { Team } from "./player/Team";
 export { PlayerPushTokenPayload } from "./api/Player";
 export { User } from "./user/User";
+export { AppConfig, PlatformMinVersion } from "./app/Config";
