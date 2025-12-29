@@ -128,6 +128,7 @@ export const styles = StyleSheet.create({
   },
   resultsButtonText: {
     color: colors.primary,
+    textAlign: "center",
   },
   actionsContainer: {
     flexDirection: "column",

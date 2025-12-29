@@ -185,7 +185,9 @@ export const getMyPendingResults = async (
 
 export const updateMatchResult = async (
   matchId: number,
-  result: MatchResult
+  result: MatchResult,
+  team1Ids?: number[],
+  team2Ids?: number[]
 ) => {
   // Creamos un array de sets con el formato [number, number][]
   const sets: [number, number][] = [];
@@ -198,11 +200,20 @@ export const updateMatchResult = async (
     sets.push([Number(result.team1Set3), Number(result.team2Set3)]);
   }
 
+  const body: {
+    matchId: number;
+    sets: [number, number][];
+    teams?: { team1: number[]; team2: number[] };
+  } = {
+    matchId,
+    sets,
+  };
+  if (team1Ids && team2Ids) {
+    body.teams = { team1: team1Ids, team2: team2Ids };
+  }
+
   return await put(UPDATE_MATCH_RESULT_URI, {
-    body: {
-      matchId,
-      sets,
-    },
+    body,
   });
 };
 

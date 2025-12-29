@@ -1,6 +1,7 @@
 import React from "react";
 import {
   DimensionValue,
+  StyleProp,
   TouchableOpacity,
   TouchableOpacityProps,
   ViewStyle,
@@ -10,7 +11,7 @@ import { styles } from "./BorderedButton.styles";
 type ButtonSize = "xs" | "s" | "m" | "l" | "xl";
 
 interface BorderedButtonProps extends TouchableOpacityProps {
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   size?: ButtonSize;
 }
 
